@@ -1,0 +1,9 @@
+*.egg
+*.egg-info
+*.py[co]
+**~
+.cache
+.coverage
+.installed.cfg
+.tox
+.idea
