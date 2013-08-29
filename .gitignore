@@ -7,3 +7,9 @@
 .installed.cfg
 .tox
 .idea
+bin
+build
+develop-eggs
+dist
+eggs
+sdist
