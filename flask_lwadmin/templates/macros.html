@@ -21,7 +21,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="#">{{ lw_navbar.get_brand().brand_name }}</a>
+      <a class="brand" href="{{ lw_navbar.get_brand().brand_url }}">
+          {% if lw_navbar.get_brand().brand_html %}{{ lw_navbar.get_brand().brand_html|safe }}{% endif %}
+          {% if lw_navbar.get_brand().brand_name %}{{ lw_navbar.get_brand().brand_name }}{% endif %}
+      </a>
       <div class="nav-collapse collapse">
         {% if lw_navbar.get_data().profile %}
         <ul class="nav pull-right">

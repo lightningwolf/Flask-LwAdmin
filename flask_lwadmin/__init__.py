@@ -28,7 +28,7 @@ class Navbar:
     DIVIDER = 3
     URL_PARSED = 4
 
-    _navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
+    _navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': '#'}, 'items': [], 'profile': []}
     _items = {}
     _keys = []
 
