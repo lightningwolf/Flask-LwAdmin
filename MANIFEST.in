@@ -5,6 +5,8 @@ graft tests
 prune  tests/__pycache__
 global-exclude *.pyc
 global-exclude *.pyo
+recursive-include flask_lwadmin/static *
+recursive-include flask_lwadmin/templates *.html
 include VERSION
 include DESCRIPTION
 include HISTORY.rst

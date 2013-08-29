@@ -1,0 +1,16 @@
+{% extends "jqueryuibootstrap_base.html" %}
+{% import 'macros.html' as macros with context -%}
+
+{% block body %}
+{{ macros.navbar() }}
+<div class="container-fluid">
+  {% block container %}{% endblock %}
+</div> <!-- /container -->
+{%- block bootstrap_js_bottom %}
+{{super()}}
+{%- endblock bootstrap_js_bottom %}
+{% endblock body %}
+
+{% block style -%}
+{{super()}}
+{% endblock style %}
