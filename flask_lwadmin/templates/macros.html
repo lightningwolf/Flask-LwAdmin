@@ -21,31 +21,20 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="#">{{ lw_navbar.get_brand() }}</a>
-      {% if lw_navbar.get_data().profile_items or lw_navbar.get_data().user %}
+      <a class="brand" href="#">{{ lw_navbar.get_brand().brand_name }}</a>
       <div class="nav-collapse collapse">
+        {% if lw_navbar.get_data().profile %}
         <ul class="nav pull-right">
           <li class="divider-vertical"></li>
-          <li>
-            {% if lw_navbar.get_data().profile_items %}
-            <div class="btn-group pull-right">
-              <a class="btn dropdown-toggle" data-toggle="dropdown" href="{{ lw_navbar.get_user().url }}">
-                <i class="icon-user"></i> {{ lw_navbar.get_user().label }} <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-            </div>
-            {% else %}
-            <a href="{{ lw_navbar.get_user().url }}"><i class="icon-user"></i> {{ lw_navbar.get_user().label }}</a>
-            {% endif %}
-          </li>
+          {% for item in lw_navbar.get_profile() %}
+          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %} {{item.label}}{% endif %}</a></li>
+          {% endfor %}
         </ul>
         {% endif %}
         {% if lw_navbar.get_data().items %}
         <ul class="nav">
           {% for item in lw_navbar.get_menu() %}
-          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}">{{item.label}}</a></li>
+          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{{item.label}}</a></li>
           {% endfor %}
         </ul>
         {% endif %}

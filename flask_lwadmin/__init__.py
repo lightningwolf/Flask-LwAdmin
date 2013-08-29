@@ -28,16 +28,14 @@ class Navbar:
     DIVIDER = 3
     URL_PARSED = 4
 
-    _navbar = {'brand': 'Project Name', 'user': None, 'items': [], 'profile_items': []}
+    _navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
     _items = {}
     _keys = []
 
-    def set_brand(self, brand):
-        self._navbar['brand'] = brand
-
-    def set_username(self, username, url=None, type=None, controller=None, disabled=False):
-        item = self.__create_base_item(username, url, type, controller, disabled)
-        self._navbar['user'] = item
+    def set_brand(self, brand_name=None, brand_url=None, brand_html=None):
+        self._navbar['brand']['brand_name'] = brand_name
+        self._navbar['brand']['brand_url'] = brand_url
+        self._navbar['brand']['brand_html'] = brand_html
 
     def set_active(self, key):
         for item_key in self._keys:
@@ -47,19 +45,25 @@ class Navbar:
         item['active'] = True
         self._items[key] = item
 
-    def add_item(self, key, label, url=None, type=None, controller=None, disabled=False):
+    def set_icon(self, key, icon, only_icon=False):
+        item = self.get_item(key)
+        item['icon'] = icon
+        item['only_icon'] = only_icon
+        self._items[key] = item
+
+    def add_menu_item(self, key, label, url=None, type=None, controller=None, disabled=False):
         self.__create_base_item(key, label, url, type, controller, disabled)
         self._items[key]['menus'] = []
         self._navbar['items'].append(key)
 
-    def add_sub_item(self, parent_key, key, label, url=None, type=None, controller=None, disabled=False):
+    def add_menu_sub_item(self, parent_key, key, label, url=None, type=None, controller=None, disabled=False):
         self.__create_base_item(key, label, url, type, controller, disabled)
         self._items[key]['parent'] = parent_key
         self._items[parent_key]['menus'].append(key)
 
     def add_profile_item(self, key, label, url=None, type=None, controller=None, disabled=False):
         self.__create_base_item(key, label, url, type, controller, disabled)
-        self._navbar['profile_items'].append(key)
+        self._navbar['profile'].append(key)
 
     def get_item(self, key):
         if key not in self._items:
@@ -72,8 +76,15 @@ class Navbar:
     def get_brand(self):
         return self._navbar['brand']
 
-    def get_user(self):
-        return self._navbar['user']
+    def get_profile(self):
+        profile = []
+        for key in self._navbar['profile']:
+            item = self.get_item(key)
+            if item['type'] == self.URL_INTERNAL:
+                item['url'] = url_for(item['url'])
+                item['type'] = self.URL_PARSED
+            profile.append(item)
+        return profile
 
     def get_menu(self):
         menu = []
@@ -93,7 +104,7 @@ class Navbar:
         if type == self.NO_URL:
             url = '#'
 
-        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False}
+        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False}
         if controller is not None:
             item['controller'] = controller
 
