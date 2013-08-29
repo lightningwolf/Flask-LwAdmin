@@ -19,3 +19,10 @@ class LwAdmin(object):
 
         app.register_blueprint(blueprint)
 
+        menu = Menu()
+
+class Menu:
+    _menu = []
+
+    def add_item(self, name, url, type=None, view=None, parent=None):
+        self._menu.append({'name': name, 'url': url, 'view': view})
