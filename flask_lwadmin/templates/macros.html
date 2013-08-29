@@ -2,11 +2,7 @@
   {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
       {% for category, m in messages %}
-        {% if category == 'error' %}
-        <div class="alert alert-error">
-        {% else %}
-        <div class="alert">
-        {% endif %}
+        <div class="alert{% if category == 'error' %} alert-error{% endif %}">
           <a href="javascript:void(0)" class="close" data-dismiss="alert">x</a>
           {{ m }}
         </div>
@@ -16,6 +12,7 @@
 {% endmacro %}
 
 {% macro navbar() %}
+{% if lw_navbar %}
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
@@ -24,28 +21,37 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="#">Project name</a>
+      <a class="brand" href="#">{{ lw_navbar.get_brand() }}</a>
+      {% if lw_navbar.get_data().profile_items or lw_navbar.get_data().user %}
       <div class="nav-collapse collapse">
         <ul class="nav pull-right">
           <li class="divider-vertical"></li>
           <li>
+            {% if lw_navbar.get_data().profile_items %}
             <div class="btn-group pull-right">
-              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-user"></i> [TU LOGINNAME] <span class="caret"></span>
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="{{ lw_navbar.get_user().url }}">
+                <i class="icon-user"></i> {{ lw_navbar.get_user().label }} <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
                 <li><a href="/logout">Logout</a></li>
               </ul>
             </div>
+            {% else %}
+            <a href="{{ lw_navbar.get_user().url }}"><i class="icon-user"></i> {{ lw_navbar.get_user().label }}</a>
+            {% endif %}
           </li>
         </ul>
+        {% endif %}
+        {% if lw_navbar.get_data().items %}
         <ul class="nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          {% for item in lw_navbar.get_menu() %}
+          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}">{{item.label}}</a></li>
+          {% endfor %}
         </ul>
+        {% endif %}
       </div><!--/.nav-collapse -->
     </div>
   </div>
 </div>
+{% endif %}
 {% endmacro %}
