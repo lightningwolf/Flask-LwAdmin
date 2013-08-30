@@ -49,7 +49,7 @@ def create_navbar_fd(conf={}):
         if 'icon' in item.keys():
             navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
-    profile = conf.get('items', [])
+    profile = conf.get('profile', [])
     for item in profile:
         if 'key' not in item.keys():
             RuntimeError('Profile items must have unique navbar key')
