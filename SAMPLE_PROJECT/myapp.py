@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template
 from flask.ext.jqueryuibootstrap import Bootstrap
-from flask.ext.lwadmin import LwAdmin, Navbar
+from flask.ext.lwadmin import LwAdmin, Navbar, create_navbar_fd
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -11,29 +11,59 @@ Bootstrap(app)
 # LwAdmin
 LwAdmin(app)
 
-navbar = Navbar()
-navbar.set_brand(brand_name='Test Project')
-navbar.add_menu_item('app.homepage', 'Homepage', 'homepage', Navbar.URL_INTERNAL)
-navbar.add_menu_item('app.about', 'About', 'about', Navbar.URL_INTERNAL)
-navbar.add_menu_item('app.contact', 'Contact', 'contact', Navbar.URL_INTERNAL)
-navbar.add_profile_item('lw_user', 'anonymous')
-navbar.set_icon('lw_user', 'icon-user')
-navbar.add_profile_item('lw_logout', 'logout')
-navbar.set_icon('lw_logout', 'icon-signout', True)
+navbar_conf = {
+    'brand': {'brand_name': 'Test Project', 'brand_url': '/'},
+    'items': [
+        {
+            'key': 'app.homepage',
+            'label': 'Homepage',
+            'url': 'homepage',
+            'type': Navbar.URL_INTERNAL
+        },
+        {
+            'key': 'app.about',
+            'label': 'About',
+            'url': 'about',
+            'type': Navbar.URL_INTERNAL
+        },
+        {
+            'key': 'app.contact',
+            'label': 'Contact',
+            'url': 'contact',
+            'type': Navbar.URL_INTERNAL
+        }
+    ],
+    'profile': [
+        {
+            'key': 'lw_user',
+            'label': 'anonymous',
+            'icon': 'icon-user'
+        },
+        {
+            'key': 'lw_logout',
+            'label': 'logout',
+            'icon': 'icon-signout',
+            'only_icon': True
+        }
+    ]
+}
 
 
 @app.route('/')
 def homepage():
+    navbar = create_navbar_fd(navbar_conf)
     navbar.set_active('app.homepage')
     return render_template('homepage.html', lw_navbar=navbar)
 
 @app.route('/about')
 def about():
+    navbar = create_navbar_fd(navbar_conf)
     navbar.set_active('app.about')
     return render_template('about.html', lw_navbar=navbar)
 
 @app.route('/contact')
 def contact():
+    navbar = create_navbar_fd(navbar_conf)
     navbar.set_active('app.contact')
     return render_template('contact.html', lw_navbar=navbar)
 

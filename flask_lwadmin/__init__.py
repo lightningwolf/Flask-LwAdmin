@@ -20,6 +20,58 @@ class LwAdmin(object):
 
         app.register_blueprint(blueprint)
 
+def create_navbar_fd(conf={}):
+    """Creating navbar from dictionary type configuration"""
+    navbar = Navbar()
+    brand = conf.get('brand', {})
+    navbar.set_brand(
+        brand_name=brand.get('brand_name', None),
+        brand_url=brand.get('brand_url', None),
+        brand_html=brand.get('brand_html', None)
+    )
+    items = conf.get('items', [])
+    for item in items:
+        if 'key' not in item.keys():
+            RuntimeError('Menu items must have unique key')
+
+        if 'label' not in item.keys():
+            RuntimeError('Menu items must have label')
+
+        navbar.add_menu_item(
+            item['key'],
+            item['label'],
+            item.get('url', None),
+            item.get('type', None),
+            item.get('controller', None),
+            item.get('disabled', False)
+        )
+
+        if 'icon' in item.keys():
+            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    profile = conf.get('items', [])
+    for item in profile:
+        if 'key' not in item.keys():
+            RuntimeError('Profile items must have unique navbar key')
+
+        if 'label' not in item.keys():
+            RuntimeError('Profile items must have label')
+
+        navbar.add_profile_item(
+            item['key'],
+            item['label'],
+            item.get('url', None),
+            item.get('type', None),
+            item.get('controller', None),
+            item.get('disabled', False)
+        )
+
+        if 'icon' in item.keys():
+            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    return navbar
+
+
 
 class Navbar:
     NO_URL = 0
@@ -28,9 +80,10 @@ class Navbar:
     DIVIDER = 3
     URL_PARSED = 4
 
-    _navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': '#'}, 'items': [], 'profile': []}
-    _items = {}
-    _keys = []
+    def __init__(self):
+        self._navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
+        self._items = {}
+        self._keys = []
 
     def set_brand(self, brand_name=None, brand_url=None, brand_html=None):
         self._navbar['brand']['brand_name'] = brand_name
@@ -38,9 +91,6 @@ class Navbar:
         self._navbar['brand']['brand_html'] = brand_html
 
     def set_active(self, key):
-        for item_key in self._keys:
-            self._items[item_key]['active'] = False
-
         item = self.get_item(key)
         item['active'] = True
         self._items[key] = item
