@@ -39,7 +39,7 @@ def main():
         description=__description__,
         long_description=open('README.rst').read() + '\n\n' + open('HISTORY.rst').read(),
         license="MIT",
-        url="http://lightningwolf.net/flask-lw-admin",
+        url="https://github.com/lightningwolf/Flask-LwAdmin",
         packages=['flask_lwadmin'],
         zip_safe=False,
         include_package_data=True,
