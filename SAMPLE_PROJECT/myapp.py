@@ -51,14 +51,12 @@ navbar_conf = {
 
 @app.route('/')
 def homepage():
-    navbar = create_navbar_fd(navbar_conf)
-    navbar.set_active('app.homepage')
+    navbar = create_navbar_fd(navbar_conf, 'app.homepage')
     return render_template('homepage.html', lw_navbar=navbar)
 
 @app.route('/about')
 def about():
-    navbar = create_navbar_fd(navbar_conf)
-    navbar.set_active('app.about')
+    navbar = create_navbar_fd(navbar_conf, 'app.about')
     return render_template('about.html', lw_navbar=navbar)
 
 @app.route('/contact')

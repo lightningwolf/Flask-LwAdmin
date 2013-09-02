@@ -4,6 +4,10 @@
 from flask import Blueprint, url_for
 
 
+class ConfigurationError(RuntimeError):
+    pass
+
+
 class LwAdmin(object):
 
     def __init__(self, app=None):
@@ -20,8 +24,12 @@ class LwAdmin(object):
 
         app.register_blueprint(blueprint)
 
-def create_navbar_fd(conf={}):
+
+def create_navbar_fd(conf=None, active_key=None):
     """Creating navbar from dictionary type configuration"""
+
+    conf = conf.copy() if conf else {}
+
     navbar = Navbar()
     brand = conf.get('brand', {})
     navbar.set_brand(
@@ -32,10 +40,10 @@ def create_navbar_fd(conf={}):
     items = conf.get('items', [])
     for item in items:
         if 'key' not in item.keys():
-            RuntimeError('Menu items must have unique key')
+            ConfigurationError('Menu items must have unique key')
 
         if 'label' not in item.keys():
-            RuntimeError('Menu items must have label')
+            ConfigurationError('Menu items must have label')
 
         navbar.add_menu_item(
             item['key'],
@@ -52,10 +60,10 @@ def create_navbar_fd(conf={}):
     profile = conf.get('profile', [])
     for item in profile:
         if 'key' not in item.keys():
-            RuntimeError('Profile items must have unique navbar key')
+            ConfigurationError('Profile items must have unique navbar key')
 
         if 'label' not in item.keys():
-            RuntimeError('Profile items must have label')
+            ConfigurationError('Profile items must have label')
 
         navbar.add_profile_item(
             item['key'],
@@ -69,6 +77,9 @@ def create_navbar_fd(conf={}):
         if 'icon' in item.keys():
             navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
+    if active_key is not None:
+        navbar.set_active(active_key)
+
     return navbar
 
 
@@ -78,7 +89,6 @@ class Navbar:
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
     DIVIDER = 3
-    URL_PARSED = 4
 
     def __init__(self):
         self._navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
@@ -117,7 +127,7 @@ class Navbar:
 
     def get_item(self, key):
         if key not in self._items:
-            RuntimeError('This key: %s not exists' % key)
+            ConfigurationError('This key: %s not exists' % key)
         return self._items[key]
 
     def get_data(self):
@@ -132,7 +142,6 @@ class Navbar:
             item = self.get_item(key)
             if item['type'] == self.URL_INTERNAL:
                 item['url'] = url_for(item['url'])
-                item['type'] = self.URL_PARSED
             profile.append(item)
         return profile
 
@@ -142,7 +151,6 @@ class Navbar:
             item = self.get_item(key)
             if item['type'] == self.URL_INTERNAL:
                 item['url'] = url_for(item['url'])
-                item['type'] = self.URL_PARSED
             menu.append(item)
         return menu
 
@@ -163,5 +171,5 @@ class Navbar:
 
     def __check_key(self, key):
         if key in self._items:
-            RuntimeError('This key: %s is not unique' % key)
+            ConfigurationError('This key: %s is not unique' % key)
         return True
