@@ -4,9 +4,10 @@ from __future__ import with_statement, division, absolute_import
 
 
 try:
-    from setuptools import setup, Command
+    from setuptools import setup, Command, find_packages
 except ImportError:
     from distutils.core import setup, Command
+    from findpackages import find_packages
 
 
 def get_version():
@@ -29,6 +30,7 @@ def get_requirements():
 def main():
     __version__ = get_version()
     __description__ = get_description()
+    __packages__ = find_packages()
     __requirements__ = get_requirements()
 
     setup(
@@ -40,7 +42,7 @@ def main():
         long_description=open('README.rst').read() + '\n\n' + open('HISTORY.rst').read(),
         license="MIT",
         url="https://github.com/lightningwolf/Flask-LwAdmin",
-        packages=['flask_lwadmin'],
+        packages=__packages__,
         zip_safe=False,
         include_package_data=True,
         platforms=['any'],
