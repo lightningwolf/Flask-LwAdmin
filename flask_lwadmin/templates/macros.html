@@ -29,14 +29,14 @@
         {% if lw_navbar.get_data().profile %}
         <ul class="nav pull-right">
           <li class="divider-vertical"></li>
-          {% for item in lw_navbar.get_profile() %}
+          {% for item in lw_navbar.get_profile() if not item.hidden %}
           <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %} {{item.label}}{% endif %}</a></li>
           {% endfor %}
         </ul>
         {% endif %}
         {% if lw_navbar.get_data().items %}
         <ul class="nav">
-          {% for item in lw_navbar.get_menu() %}
+          {% for item in lw_navbar.get_menu() if not item.hidden %}
           <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{{item.label}}</a></li>
           {% endfor %}
         </ul>

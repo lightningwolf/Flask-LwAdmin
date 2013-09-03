@@ -25,66 +25,7 @@ class LwAdmin(object):
         app.register_blueprint(blueprint)
 
 
-def create_navbar_fd(conf=None, active_key=None):
-    """Creating navbar from dictionary type configuration"""
-
-    conf = conf.copy() if conf else {}
-
-    navbar = Navbar()
-    brand = conf.get('brand', {})
-    navbar.set_brand(
-        brand_name=brand.get('brand_name', None),
-        brand_url=brand.get('brand_url', None),
-        brand_html=brand.get('brand_html', None)
-    )
-    items = conf.get('items', [])
-    for item in items:
-        if 'key' not in item.keys():
-            ConfigurationError('Menu items must have unique key')
-
-        if 'label' not in item.keys():
-            ConfigurationError('Menu items must have label')
-
-        navbar.add_menu_item(
-            item['key'],
-            item['label'],
-            item.get('url', None),
-            item.get('type', None),
-            item.get('controller', None),
-            item.get('disabled', False)
-        )
-
-        if 'icon' in item.keys():
-            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
-
-    profile = conf.get('profile', [])
-    for item in profile:
-        if 'key' not in item.keys():
-            ConfigurationError('Profile items must have unique navbar key')
-
-        if 'label' not in item.keys():
-            ConfigurationError('Profile items must have label')
-
-        navbar.add_profile_item(
-            item['key'],
-            item['label'],
-            item.get('url', None),
-            item.get('type', None),
-            item.get('controller', None),
-            item.get('disabled', False)
-        )
-
-        if 'icon' in item.keys():
-            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
-
-    if active_key is not None:
-        navbar.set_active(active_key)
-
-    return navbar
-
-
-
-class Navbar:
+class Navbar(object):
     NO_URL = 0
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
@@ -94,6 +35,10 @@ class Navbar:
         self._navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
         self._items = {}
         self._keys = []
+        self._permissions = {}
+
+    def set_permissions(self, permissions):
+        self._permissions = permissions
 
     def set_brand(self, brand_name=None, brand_url=None, brand_html=None):
         self._navbar['brand']['brand_name'] = brand_name
@@ -111,18 +56,18 @@ class Navbar:
         item['only_icon'] = only_icon
         self._items[key] = item
 
-    def add_menu_item(self, key, label, url=None, type=None, controller=None, disabled=False):
-        self.__create_base_item(key, label, url, type, controller, disabled)
+    def add_menu_item(self, key, label, url=None, type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, type, credential, disabled)
         self._items[key]['menus'] = []
         self._navbar['items'].append(key)
 
-    def add_menu_sub_item(self, parent_key, key, label, url=None, type=None, controller=None, disabled=False):
-        self.__create_base_item(key, label, url, type, controller, disabled)
+    def add_menu_sub_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, type, credential, disabled)
         self._items[key]['parent'] = parent_key
         self._items[parent_key]['menus'].append(key)
 
-    def add_profile_item(self, key, label, url=None, type=None, controller=None, disabled=False):
-        self.__create_base_item(key, label, url, type, controller, disabled)
+    def add_profile_item(self, key, label, url=None, type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, type, credential, disabled)
         self._navbar['profile'].append(key)
 
     def get_item(self, key):
@@ -154,7 +99,7 @@ class Navbar:
             menu.append(item)
         return menu
 
-    def __create_base_item(self, key, label, url=None, type=None, controller=None, disabled=False):
+    def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__check_key(key)
         if type is None:
             type = self.NO_URL
@@ -162,9 +107,11 @@ class Navbar:
         if type == self.NO_URL:
             url = '#'
 
-        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False}
-        if controller is not None:
-            item['controller'] = controller
+        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False, 'hidden': False}
+        if credential is not None and self._permissions is not None:
+            if credential in self._permissions.keys():
+                user_permissions = self._permissions[credential]
+                item['hidden'] = self.__is_hidden(user_permissions)
 
         self._keys.append(key)
         self._items[key] = item
@@ -173,3 +120,70 @@ class Navbar:
         if key in self._items:
             ConfigurationError('This key: %s is not unique' % key)
         return True
+
+    def __is_hidden(self, user_permission=None):
+        if user_permission is not None:
+            if not user_permission.can():
+                return True
+        return False
+
+
+def create_navbar_fd(conf=None, active_key=None):
+    """Creating navbar from dictionary type configuration"""
+
+    conf = conf.copy() if conf else {}
+
+    navbar = Navbar()
+    brand = conf.get('brand', {})
+    navbar.set_brand(
+        brand_name=brand.get('brand_name', None),
+        brand_url=brand.get('brand_url', None),
+        brand_html=brand.get('brand_html', None)
+    )
+    if 'permissions' in conf.keys():
+        navbar.set_permissions(conf['permissions'])
+
+    items = conf.get('items', [])
+    for item in items:
+        if 'key' not in item.keys():
+            ConfigurationError('Menu items must have unique key')
+
+        if 'label' not in item.keys():
+            ConfigurationError('Menu items must have label')
+
+        navbar.add_menu_item(
+            item['key'],
+            item['label'],
+            item.get('url', None),
+            item.get('type', None),
+            item.get('credential', None),
+            item.get('disabled', False)
+        )
+
+        if 'icon' in item.keys():
+            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    profile = conf.get('profile', [])
+    for item in profile:
+        if 'key' not in item.keys():
+            ConfigurationError('Profile items must have unique navbar key')
+
+        if 'label' not in item.keys():
+            ConfigurationError('Profile items must have label')
+
+        navbar.add_profile_item(
+            item['key'],
+            item['label'],
+            item.get('url', None),
+            item.get('type', None),
+            item.get('credential', None),
+            item.get('disabled', False)
+        )
+
+        if 'icon' in item.keys():
+            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    if active_key is not None:
+        navbar.set_active(active_key)
+
+    return navbar
