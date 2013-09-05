@@ -1,5 +1,5 @@
 {% extends "jqueryuibootstrap_base.html" %}
-{% import 'macros.html' as macros with context -%}
+{% import 'messages_macros.html' as messages_macros with context -%}
 
 {% block body %}
 <div class="container-fluid">
@@ -7,7 +7,7 @@
     {{ form.hidden_tag() if form.hidden_tag }}
     <h2 class="form-signin-heading">Please sign in</h2>
 
-    {{ macros.messages() }}
+    {{ messages_macros.messages() }}
 
     {% for f in form if f.type != 'CSRFTokenField' %}
     <div class="control-group{% if f.errors %} warning{% endif %}">
