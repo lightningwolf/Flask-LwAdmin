@@ -59,6 +59,11 @@ class Navbar(object):
         item['only_icon'] = only_icon
         self._items[key] = item
 
+    def set_caret(self, key, caret):
+        item = self.get_item(key)
+        item['caret'] = caret
+        self._items[key] = item
+
     def add_menu_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
         self._items[key]['menus'] = []
@@ -106,6 +111,8 @@ class Navbar(object):
         if 'label' not in item.keys():
             ConfigurationError('Menu items must have label')
 
+        item['caret'] = item.get('caret', False)
+
         return item
 
     def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
@@ -127,7 +134,7 @@ class Navbar(object):
         if type == self.NO_URL:
             url = '#'
 
-        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False, 'hidden': False}
+        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False, 'hidden': False, 'caret': False}
         if credential is not None and self._permissions is not None:
             if credential in self._permissions.keys():
                 user_permissions = self._permissions[credential]
@@ -213,10 +220,14 @@ def add_menu_item(navbar, item):
     if 'icon' in item.keys():
         navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
+    if item['caret']:
+        navbar.set_caret(item['key'], True)
+
     if item['type'] == Navbar.GROUP:
         for subitem in item['group']:
             subitem = navbar.parse_item(subitem)
             navbar.add_group_item(
+                item['key'],
                 subitem['key'],
                 subitem['label'],
                 subitem.get('url', None),
@@ -227,6 +238,9 @@ def add_menu_item(navbar, item):
 
             if 'icon' in subitem.keys():
                 navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))
+
+            if subitem['caret']:
+                navbar.set_caret(subitem['key'], True)
 
 
 def add_profile_item(navbar, item):
@@ -244,6 +258,9 @@ def add_profile_item(navbar, item):
     if 'icon' in item.keys():
         navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
+    if item['caret']:
+        navbar.set_caret(item['key'], True)
+
     if item['type'] == Navbar.GROUP:
         for subitem in item['group']:
             subitem = navbar.parse_item(subitem)
@@ -259,3 +276,6 @@ def add_profile_item(navbar, item):
 
             if 'icon' in subitem.keys():
                 navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))
+
+            if subitem['caret']:
+                navbar.set_caret(subitem['key'], True)

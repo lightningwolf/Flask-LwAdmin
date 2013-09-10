@@ -48,10 +48,7 @@
 {% endmacro %}
 
 {% macro navbar_link(item, class='') %}
-<a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">
-    {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}
-    {% if not item.only_icon %} {{item.label}}{% endif %}
-</a>
+<a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %}{% if item.icon %} {% endif %}{{item.label}}{% endif %}{% if item.caret %}<span class="caret"></span>{% endif %}</a>
 {% endmacro %}
 
 <!--
