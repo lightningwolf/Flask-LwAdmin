@@ -30,6 +30,7 @@ class Navbar(object):
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
     DIVIDER = 3
+    GROUP = 4
 
     def __init__(self):
         self._navbar = {'brand': {'brand_name': None, 'brand_html': None, 'brand_url': None}, 'items': [], 'profile': []}
@@ -63,14 +64,17 @@ class Navbar(object):
         self._items[key]['menus'] = []
         self._navbar['items'].append(key)
 
-    def add_menu_sub_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
-        self.__create_base_item(key, label, url, type, credential, disabled)
-        self._items[key]['parent'] = parent_key
-        self._items[parent_key]['menus'].append(key)
-
     def add_profile_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
         self._navbar['profile'].append(key)
+
+    def add_group_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
+        pass
+
+    def add_dropdown_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, type, credential, disabled)
+        self._items[key]['parent'] = parent_key
+        self._items[parent_key]['menus'].append(key)
 
     def generate_menu(self):
         self.menu = self.__generate(self._navbar['items'])
@@ -94,6 +98,17 @@ class Navbar(object):
         if type is None:
             type = self.NO_URL
 
+        if type is self.GROUP:
+            self.__create_group_element(key)
+        else:
+            self.__create_normal_element(key, label, url, type, credential, disabled)
+
+    def __create_group_element(self, key):
+        item = {'type': self.GROUP, 'items': []}
+        self._keys.append(key)
+        self._items[key] = item
+
+    def __create_normal_element(self, key, label, url, type, credential=None, disabled=False):
         if type == self.NO_URL:
             url = '#'
 
@@ -121,6 +136,7 @@ class Navbar(object):
         result = []
         for key in data:
             item = self.get_item(key)
+            print item
             if item['type'] == self.URL_INTERNAL:
                 item['url'] = url_for(item['url'])
             result.append(item)
@@ -160,46 +176,48 @@ def create_navbar_fd(conf=None, active_key=None):
 
 
 def add_menu_item(navbar, item):
-        if 'key' not in item.keys():
-            ConfigurationError('Menu items must have unique key')
+    if 'key' not in item.keys():
+        ConfigurationError('Menu items must have unique key')
 
-        if 'group' in item.keys():
-            item['label'] = ''
+    if 'group' in item.keys():
+        item['label'] = ''
+        item['type'] = Navbar.GROUP
 
-        if 'label' not in item.keys():
-            ConfigurationError('Menu items must have label')
+    if 'label' not in item.keys():
+        ConfigurationError('Menu items must have label')
 
-        navbar.add_menu_item(
-            item['key'],
-            item['label'],
-            item.get('url', None),
-            item.get('type', None),
-            item.get('credential', None),
-            item.get('disabled', False)
-        )
+    navbar.add_menu_item(
+        item['key'],
+        item['label'],
+        item.get('url', None),
+        item.get('type', None),
+        item.get('credential', None),
+        item.get('disabled', False)
+    )
 
-        if 'icon' in item.keys():
-            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+    if 'icon' in item.keys():
+        navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
 
 def add_profile_item(navbar, item):
-        if 'key' not in item.keys():
-            ConfigurationError('Profile items must have unique navbar key')
+    if 'key' not in item.keys():
+        ConfigurationError('Profile items must have unique navbar key')
 
-        if 'group' in item.keys():
-            item['label'] = ''
+    if 'group' in item.keys():
+        item['label'] = ''
+        item['type'] = Navbar.GROUP
 
-        if 'label' not in item.keys():
-            ConfigurationError('Profile items must have label')
+    if 'label' not in item.keys():
+        ConfigurationError('Profile items must have label')
 
-        navbar.add_profile_item(
-            item['key'],
-            item['label'],
-            item.get('url', None),
-            item.get('type', None),
-            item.get('credential', None),
-            item.get('disabled', False)
-        )
+    navbar.add_profile_item(
+        item['key'],
+        item['label'],
+        item.get('url', None),
+        item.get('type', None),
+        item.get('credential', None),
+        item.get('disabled', False)
+    )
 
-        if 'icon' in item.keys():
-            navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+    if 'icon' in item.keys():
+        navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))

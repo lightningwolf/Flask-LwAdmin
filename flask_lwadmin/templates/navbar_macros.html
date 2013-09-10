@@ -35,11 +35,15 @@
     {% for item in items if not item.hidden %}
 <li class="{% if item.active %}active{% endif %}">
     {% if item.group %}AAAA{% else %}
-    <a href="{{item.url}}" title="{{item.label}}">
-        {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}
-        {% if not item.only_icon %} {{item.label}}{% endif %}
-    </a>
+    {{ navbar_link(item) }}
     {% endif %}
 </li>
     {% endfor %}
+{% endmacro %}
+
+{% macro navbar_link(item) %}
+<a href="{{item.url}}" title="{{item.label}}">
+    {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}
+    {% if not item.only_icon %} {{item.label}}{% endif %}
+</a>
 {% endmacro %}
