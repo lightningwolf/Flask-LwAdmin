@@ -150,11 +150,21 @@ class Navbar(object):
     def __generate(self, data):
         result = []
         for key in data:
-            item = self.get_item(key)
-            if item['type'] == self.URL_INTERNAL:
-                item['url'] = url_for(item['url'])
+            item = self.__prepare_item(self.get_item(key))
+            if item['type'] == self.GROUP:
+                group = []
+                for gkey in item['group']:
+                    gitem = self.__prepare_item(self.get_item(gkey))
+                    group.append(gitem)
+                item['group'] = group
+
             result.append(item)
         return result
+
+    def __prepare_item(self, item):
+        if item['type'] == self.URL_INTERNAL:
+            item['url'] = url_for(item['url'])
+        return item
 
 
 def create_navbar_fd(conf=None, active_key=None):
@@ -186,8 +196,6 @@ def create_navbar_fd(conf=None, active_key=None):
     navbar.generate_menu()
     navbar.generate_profile()
 
-    print navbar.get_data()
-
     return navbar
 
 
@@ -215,8 +223,10 @@ def add_menu_item(navbar, item):
                 subitem.get('type', None),
                 subitem.get('credential', None),
                 subitem.get('disabled', False)
-
             )
+
+            if 'icon' in subitem.keys():
+                navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))
 
 
 def add_profile_item(navbar, item):
@@ -245,5 +255,7 @@ def add_profile_item(navbar, item):
                 subitem.get('type', None),
                 subitem.get('credential', None),
                 subitem.get('disabled', False)
-
             )
+
+            if 'icon' in subitem.keys():
+                navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))

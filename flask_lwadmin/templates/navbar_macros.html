@@ -36,7 +36,9 @@
 <li class="{% if item.active %}active{% endif %}">
     {% if item.group %}
     <div class="btn-group {{ pull }}">
-        AAA
+        {% for gitem in item.group %}
+        {{ navbar_link(gitem, 'btn') }}
+        {% endfor %}
     </div>
     {% else %}
     {{ navbar_link(item) }}
