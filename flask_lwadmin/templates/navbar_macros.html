@@ -1,36 +1,45 @@
 {% macro navbar() %}
-{% if lw_navbar %}
+    {% if lw_navbar %}
 <div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="{{ lw_navbar.get_brand().brand_url }}">
-          {% if lw_navbar.get_brand().brand_html %}{{ lw_navbar.get_brand().brand_html|safe }}{% endif %}
-          {% if lw_navbar.get_brand().brand_name %}{{ lw_navbar.get_brand().brand_name }}{% endif %}
-      </a>
-      <div class="nav-collapse collapse">
-        {% if lw_navbar.get_data().profile %}
-        <ul class="nav pull-right">
-          <li class="divider-vertical"></li>
-          {% for item in lw_navbar.get_profile() if not item.hidden %}
-          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %} {{item.label}}{% endif %}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        {% if lw_navbar.get_data().items %}
-        <ul class="nav">
-          {% for item in lw_navbar.get_menu() if not item.hidden %}
-          <li{% if item.active %} class="active"{% endif %}><a href="{{item.url}}" title="{{item.label}}">{{item.label}}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </div><!--/.nav-collapse -->
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="{{ lw_navbar.get_brand().brand_url }}">
+                {% if lw_navbar.get_brand().brand_html %}{{ lw_navbar.get_brand().brand_html|safe }}{% endif %}
+                {% if lw_navbar.get_brand().brand_name %}{{ lw_navbar.get_brand().brand_name }}{% endif %}
+            </a>
+            <div class="nav-collapse collapse">
+                {% if lw_navbar.get_data().profile %}
+                <ul class="nav pull-right">
+                    <li class="divider-vertical"></li>
+                    {{ navbar_items(lw_navbar.profile, 'pull-right') }}
+                </ul>
+                {% endif %}
+                {% if lw_navbar.get_data().items %}
+                <ul class="nav">
+                    {{ navbar_items(lw_navbar.menu) }}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-{% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro navbar_items(items, pull='') %}
+    {% for item in items if not item.hidden %}
+<li class="{% if item.active %}active{% endif %}">
+    {% if item.group %}AAAA{% else %}
+    <a href="{{item.url}}" title="{{item.label}}">
+        {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}
+        {% if not item.only_icon %} {{item.label}}{% endif %}
+    </a>
+    {% endif %}
+</li>
+    {% endfor %}
 {% endmacro %}

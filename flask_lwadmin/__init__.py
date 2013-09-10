@@ -36,6 +36,8 @@ class Navbar(object):
         self._items = {}
         self._keys = []
         self._permissions = {}
+        self.menu = []
+        self.profile = []
 
     def set_permissions(self, permissions):
         self._permissions = permissions
@@ -70,6 +72,12 @@ class Navbar(object):
         self.__create_base_item(key, label, url, type, credential, disabled)
         self._navbar['profile'].append(key)
 
+    def generate_menu(self):
+        self.menu = self.__generate(self._navbar['items'])
+
+    def generate_profile(self):
+        self.profile = self.__generate(self._navbar['profile'])
+
     def get_item(self, key):
         if key not in self._items:
             ConfigurationError('This key: %s not exists' % key)
@@ -80,24 +88,6 @@ class Navbar(object):
 
     def get_brand(self):
         return self._navbar['brand']
-
-    def get_profile(self):
-        profile = []
-        for key in self._navbar['profile']:
-            item = self.get_item(key)
-            if item['type'] == self.URL_INTERNAL:
-                item['url'] = url_for(item['url'])
-            profile.append(item)
-        return profile
-
-    def get_menu(self):
-        menu = []
-        for key in self._navbar['items']:
-            item = self.get_item(key)
-            if item['type'] == self.URL_INTERNAL:
-                item['url'] = url_for(item['url'])
-            menu.append(item)
-        return menu
 
     def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__check_key(key)
@@ -127,6 +117,15 @@ class Navbar(object):
                 return True
         return False
 
+    def __generate(self, data):
+        result = []
+        for key in data:
+            item = self.get_item(key)
+            if item['type'] == self.URL_INTERNAL:
+                item['url'] = url_for(item['url'])
+            result.append(item)
+        return result
+
 
 def create_navbar_fd(conf=None, active_key=None):
     """Creating navbar from dictionary type configuration"""
@@ -145,8 +144,27 @@ def create_navbar_fd(conf=None, active_key=None):
 
     items = conf.get('items', [])
     for item in items:
+        add_menu_item(navbar, item)
+
+    profile = conf.get('profile', [])
+    for item in profile:
+        add_profile_item(navbar, item)
+
+    if active_key is not None:
+        navbar.set_active(active_key)
+
+    navbar.generate_menu()
+    navbar.generate_profile()
+
+    return navbar
+
+
+def add_menu_item(navbar, item):
         if 'key' not in item.keys():
             ConfigurationError('Menu items must have unique key')
+
+        if 'group' in item.keys():
+            item['label'] = ''
 
         if 'label' not in item.keys():
             ConfigurationError('Menu items must have label')
@@ -163,10 +181,13 @@ def create_navbar_fd(conf=None, active_key=None):
         if 'icon' in item.keys():
             navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
-    profile = conf.get('profile', [])
-    for item in profile:
+
+def add_profile_item(navbar, item):
         if 'key' not in item.keys():
             ConfigurationError('Profile items must have unique navbar key')
+
+        if 'group' in item.keys():
+            item['label'] = ''
 
         if 'label' not in item.keys():
             ConfigurationError('Profile items must have label')
@@ -182,8 +203,3 @@ def create_navbar_fd(conf=None, active_key=None):
 
         if 'icon' in item.keys():
             navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
-
-    if active_key is not None:
-        navbar.set_active(active_key)
-
-    return navbar
