@@ -69,7 +69,9 @@ class Navbar(object):
         self._navbar['profile'].append(key)
 
     def add_group_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
-        pass
+        self.__create_base_item(key, label, url, type, credential, disabled)
+        self._items[key]['parent'] = parent_key
+        self._items[parent_key]['group'].append(key)
 
     def add_dropdown_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
@@ -93,6 +95,19 @@ class Navbar(object):
     def get_brand(self):
         return self._navbar['brand']
 
+    def parse_item(self, item):
+        if 'key' not in item.keys():
+            ConfigurationError('Menu items must have unique key')
+
+        if 'group' in item.keys():
+            item['label'] = ''
+            item['type'] = self.GROUP
+
+        if 'label' not in item.keys():
+            ConfigurationError('Menu items must have label')
+
+        return item
+
     def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__check_key(key)
         if type is None:
@@ -104,7 +119,7 @@ class Navbar(object):
             self.__create_normal_element(key, label, url, type, credential, disabled)
 
     def __create_group_element(self, key):
-        item = {'type': self.GROUP, 'items': []}
+        item = {'type': self.GROUP, 'group': []}
         self._keys.append(key)
         self._items[key] = item
 
@@ -136,7 +151,6 @@ class Navbar(object):
         result = []
         for key in data:
             item = self.get_item(key)
-            print item
             if item['type'] == self.URL_INTERNAL:
                 item['url'] = url_for(item['url'])
             result.append(item)
@@ -172,20 +186,13 @@ def create_navbar_fd(conf=None, active_key=None):
     navbar.generate_menu()
     navbar.generate_profile()
 
+    print navbar.get_data()
+
     return navbar
 
 
 def add_menu_item(navbar, item):
-    if 'key' not in item.keys():
-        ConfigurationError('Menu items must have unique key')
-
-    if 'group' in item.keys():
-        item['label'] = ''
-        item['type'] = Navbar.GROUP
-
-    if 'label' not in item.keys():
-        ConfigurationError('Menu items must have label')
-
+    item = navbar.parse_item(item)
     navbar.add_menu_item(
         item['key'],
         item['label'],
@@ -198,17 +205,22 @@ def add_menu_item(navbar, item):
     if 'icon' in item.keys():
         navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
 
+    if item['type'] == Navbar.GROUP:
+        for subitem in item['group']:
+            subitem = navbar.parse_item(subitem)
+            navbar.add_group_item(
+                subitem['key'],
+                subitem['label'],
+                subitem.get('url', None),
+                subitem.get('type', None),
+                subitem.get('credential', None),
+                subitem.get('disabled', False)
+
+            )
+
 
 def add_profile_item(navbar, item):
-    if 'key' not in item.keys():
-        ConfigurationError('Profile items must have unique navbar key')
-
-    if 'group' in item.keys():
-        item['label'] = ''
-        item['type'] = Navbar.GROUP
-
-    if 'label' not in item.keys():
-        ConfigurationError('Profile items must have label')
+    item = navbar.parse_item(item)
 
     navbar.add_profile_item(
         item['key'],
@@ -221,3 +233,17 @@ def add_profile_item(navbar, item):
 
     if 'icon' in item.keys():
         navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    if item['type'] == Navbar.GROUP:
+        for subitem in item['group']:
+            subitem = navbar.parse_item(subitem)
+            navbar.add_group_item(
+                item['key'],
+                subitem['key'],
+                subitem['label'],
+                subitem.get('url', None),
+                subitem.get('type', None),
+                subitem.get('credential', None),
+                subitem.get('disabled', False)
+
+            )

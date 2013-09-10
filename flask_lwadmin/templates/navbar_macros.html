@@ -34,16 +34,45 @@
 {% macro navbar_items(items, pull='') %}
     {% for item in items if not item.hidden %}
 <li class="{% if item.active %}active{% endif %}">
-    {% if item.group %}AAAA{% else %}
+    {% if item.group %}
+    <div class="btn-group {{ pull }}">
+        AAA
+    </div>
+    {% else %}
     {{ navbar_link(item) }}
     {% endif %}
 </li>
     {% endfor %}
 {% endmacro %}
 
-{% macro navbar_link(item) %}
-<a href="{{item.url}}" title="{{item.label}}">
+{% macro navbar_link(item, class='') %}
+<a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">
     {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}
     {% if not item.only_icon %} {{item.label}}{% endif %}
 </a>
 {% endmacro %}
+
+<!--
+<ul class="nav pull-right">
+    <li class="divider-vertical"></li>
+    <li>
+        <div class="btn-group pull-right">
+            <a href="#" class="btn btn-primary">
+                <i class="icon-user icon-white"></i>
+                username
+            </a>
+            <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="/logout">
+                        <i class="icon-off"></i>
+                        logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+-->
