@@ -66,22 +66,24 @@ class Navbar(object):
 
     def add_menu_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
-        self._items[key]['menus'] = []
+        self._items[key]['dropdown'] = []
         self._navbar['items'].append(key)
 
     def add_profile_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
+        self._items[key]['dropdown'] = []
         self._navbar['profile'].append(key)
 
     def add_group_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
         self._items[key]['parent'] = parent_key
+        self._items[key]['dropdown'] = []
         self._items[parent_key]['group'].append(key)
 
     def add_dropdown_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
         self.__create_base_item(key, label, url, type, credential, disabled)
         self._items[key]['parent'] = parent_key
-        self._items[parent_key]['menus'].append(key)
+        self._items[parent_key]['dropdown'].append(key)
 
     def generate_menu(self):
         self.menu = self.__generate(self._navbar['items'])
@@ -104,6 +106,9 @@ class Navbar(object):
         if 'key' not in item.keys():
             ConfigurationError('Menu items must have unique key')
 
+        if 'type' not in item.keys():
+            item['type'] = self.NO_URL
+
         if 'group' in item.keys():
             item['label'] = ''
             item['type'] = self.GROUP
@@ -117,9 +122,6 @@ class Navbar(object):
 
     def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
         self.__check_key(key)
-        if type is None:
-            type = self.NO_URL
-
         if type is self.GROUP:
             self.__create_group_element(key)
         else:
@@ -159,12 +161,26 @@ class Navbar(object):
         for key in data:
             item = self.__prepare_item(self.get_item(key))
             if item['type'] == self.GROUP:
-                group = []
-                for gkey in item['group']:
-                    gitem = self.__prepare_item(self.get_item(gkey))
-                    group.append(gitem)
-                item['group'] = group
+                item['group'] = self.__generate_group(item['group'])
+            if len(item['dropdown']) > 0:
+                item['dropdown'] = self.__generate_dropdown(item['dropdown'])
 
+            result.append(item)
+        return result
+
+    def __generate_group(self, group):
+        result = []
+        for gkey in group:
+            gitem = self.__prepare_item(self.get_item(gkey))
+            if len(gitem['dropdown']) > 0:
+                gitem['dropdown'] = self.__generate_dropdown(gitem['dropdown'])
+            result.append(gitem)
+        return result
+
+    def __generate_dropdown(self, dropdowns):
+        result = []
+        for dropdown in dropdowns:
+            item = self.__prepare_item(self.get_item(dropdown))
             result.append(item)
         return result
 
@@ -225,22 +241,12 @@ def add_menu_item(navbar, item):
 
     if item['type'] == Navbar.GROUP:
         for subitem in item['group']:
-            subitem = navbar.parse_item(subitem)
-            navbar.add_group_item(
-                item['key'],
-                subitem['key'],
-                subitem['label'],
-                subitem.get('url', None),
-                subitem.get('type', None),
-                subitem.get('credential', None),
-                subitem.get('disabled', False)
-            )
+            add_group_item(navbar, item['key'], subitem)
 
-            if 'icon' in subitem.keys():
-                navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))
+    if 'dropdown' in item.keys():
+        for subitem in item['dropdown']:
+            add_dropdown_item(navbar, item['key'], subitem)
 
-            if subitem['caret']:
-                navbar.set_caret(subitem['key'], True)
 
 
 def add_profile_item(navbar, item):
@@ -263,19 +269,50 @@ def add_profile_item(navbar, item):
 
     if item['type'] == Navbar.GROUP:
         for subitem in item['group']:
-            subitem = navbar.parse_item(subitem)
-            navbar.add_group_item(
-                item['key'],
-                subitem['key'],
-                subitem['label'],
-                subitem.get('url', None),
-                subitem.get('type', None),
-                subitem.get('credential', None),
-                subitem.get('disabled', False)
-            )
+            add_group_item(navbar, item['key'], subitem)
 
-            if 'icon' in subitem.keys():
-                navbar.set_icon(subitem['key'], subitem['icon'], subitem.get('only_icon', False))
+    if 'dropdown' in item.keys():
+        for subitem in item['dropdown']:
+            add_dropdown_item(navbar, item['key'], subitem)
 
-            if subitem['caret']:
-                navbar.set_caret(subitem['key'], True)
+
+def add_group_item(navbar, parent, item):
+    item = navbar.parse_item(item)
+    navbar.add_group_item(
+        parent,
+        item['key'],
+        item['label'],
+        item.get('url', None),
+        item.get('type', None),
+        item.get('credential', None),
+        item.get('disabled', False)
+    )
+
+    if 'icon' in item.keys():
+        navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    if item['caret']:
+        navbar.set_caret(item['key'], True)
+
+    if 'dropdown' in item.keys():
+        for subitem in item['dropdown']:
+            add_dropdown_item(navbar, item['key'], subitem)
+
+
+def add_dropdown_item(navbar, parent, item):
+    item = navbar.parse_item(item)
+    navbar.add_dropdown_item(
+        parent,
+        item['key'],
+        item['label'],
+        item.get('url', None),
+        item.get('type', None),
+        item.get('credential', None),
+        item.get('disabled', False)
+    )
+
+    if 'icon' in item.keys():
+        navbar.set_icon(item['key'], item['icon'], item.get('only_icon', False))
+
+    if item['caret']:
+        navbar.set_caret(item['key'], True)

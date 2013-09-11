@@ -33,7 +33,7 @@
 
 {% macro navbar_items(items, pull='') %}
     {% for item in items if not item.hidden %}
-<li class="{% if item.active %}active{% endif %}">
+<li class="{% if item.active %}active {% endif %}{% if item.dropdown|length > 0 %}dropdown {% endif %}">
     {% if item.group %}
     <div class="btn-group {{ pull }}">
         {% for gitem in item.group %}
@@ -48,30 +48,20 @@
 {% endmacro %}
 
 {% macro navbar_link(item, class='') %}
-<a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %}{% if item.icon %} {% endif %}{{item.label}}{% endif %}{% if item.caret %}<span class="caret"></span>{% endif %}</a>
-{% endmacro %}
-
-<!--
-<ul class="nav pull-right">
-    <li class="divider-vertical"></li>
+    {% if item.dropdown|length > 0 %}
+<a href="{{item.url}}" data-toggle="dropdown" class="{{ class }} dropdown-toggle">{{ navbar_link_body(item) }}</a>
+<ul class="dropdown-menu">
     <li>
-        <div class="btn-group pull-right">
-            <a href="#" class="btn btn-primary">
-                <i class="icon-user icon-white"></i>
-                username
-            </a>
-            <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="/logout">
-                        <i class="icon-off"></i>
-                        logout
-                    </a>
-                </li>
-            </ul>
-        </div>
+        {% for ditem in item.dropdown if not ditem.hidden %}
+        {{ navbar_link(ditem, class) }}
+        {% endfor %}
     </li>
 </ul>
--->
+    {% else %}
+<a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">{{ navbar_link_body(item) }}</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro navbar_link_body(item) %}
+{% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %}{% if item.icon %} {% endif %}{{item.label}}{% endif %}{% if item.caret %}<span class="caret"></span>{% endif %}
+{% endmacro %}
