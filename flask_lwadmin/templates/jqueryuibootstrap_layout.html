@@ -4,7 +4,9 @@
 {% block body %}
 {{ navbar_macros.navbar() }}
 <div class="container-fluid">
-  {% block container %}{% endblock %}
+  <div id="content">
+    {% block container %}{% endblock %}
+  </div>
 </div> <!-- /container -->
 {%- block bootstrap_js_bottom %}
 {{super()}}
