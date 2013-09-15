@@ -15,10 +15,10 @@ class LwAdmin(object):
 
     def init_app(self, app):
         blueprint = Blueprint(
-            'lwadmin',
+            'lw_admin',
             __name__,
             template_folder='templates',
             static_folder='static',
-            static_url_path=app.static_url_path + '/lwadmin')
+            static_url_path=app.static_url_path + '/lw_admin')
 
         app.register_blueprint(blueprint)

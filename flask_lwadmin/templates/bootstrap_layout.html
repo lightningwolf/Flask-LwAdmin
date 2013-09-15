@@ -10,9 +10,21 @@
 </div> <!-- /container -->
 {%- block bootstrap_js_bottom %}
 {{super()}}
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-1.10.1.custom.min.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-timepicker-addon.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-datepicker-pl.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/lw-admin.js') }}"></script>
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
+<!--[if gte IE 8]><script src="/twMediaPlugin/jqfu/js/cors/jquery.xdr-transport.js"></script><![endif]-->
+<script type="text/javascript">
+  $('[rel="tooltip"]').tooltip();
+  $('[rel="datepicker"]').datepicker();
+</script>
 {%- endblock bootstrap_js_bottom %}
 {% endblock body %}
 
 {% block style -%}
 {{super()}}
+  <link rel="stylesheet" href="{{ url_for('lw_admin.static', filename='css/smoothness/jquery-ui-1.10.1.custom.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('lw_admin.static', filename='css/jquery-ui-timepicker-addon.css') }}">
 {% endblock style %}

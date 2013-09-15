@@ -1,0 +1,20 @@
+{% extends "bootstrap_responsive.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div id="content">
+        <h1>404</h1>
+        {{ error }}
+    </div>
+</div>
+{%- block bootstrap_js_bottom %}
+{{super()}}
+{%- endblock bootstrap_js_bottom %}
+{% endblock %}
+
+{%- block style_navbar_padding %}
+{%- endblock style_navbar_padding %}
+
+{% block style -%}
+{{super()}}
+{%- endblock style %}

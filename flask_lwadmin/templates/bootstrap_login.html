@@ -1,0 +1,84 @@
+{% extends "bootstrap_responsive.html" %}
+{% import 'macros/messages.html' as messages_macros with context -%}
+
+{% block body %}
+<div class="container-fluid">
+  <form class="form-signin" method="post">
+    {{ form.hidden_tag() if form.hidden_tag }}
+    <h2 class="form-signin-heading">Please sign in</h2>
+
+    {{ messages_macros.messages() }}
+
+    {% for f in form if f.type != 'CSRFTokenField' %}
+    <div class="control-group{% if f.errors %} warning{% endif %}">
+      {% if f.errors %}
+        {% for e in f.errors %}
+      <p class="text-warning">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {% if f.type == 'TextField' %}
+      <input type="text" class="input-block-level" placeholder="{{ f.label.text }}" name="{{ f.name }}" {% if f.raw_data != None %} value="{{ f.data }}"{% endif %}>
+      {% endif %}
+      {% if f.type == 'PasswordField' %}
+      <input type="password" class="input-block-level" placeholder="{{ f.label.text }}" name="{{ f.name }}">
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+  </form>
+</div>
+{%- block bootstrap_js_bottom %}
+{{super()}}
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-1.10.1.custom.min.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-timepicker-addon.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/jquery-ui-datepicker-pl.js') }}"></script>
+<script src="{{ url_for('lw_admin.static', filename='js/lw-admin.js') }}"></script>
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
+<!--[if gte IE 8]><script src="/twMediaPlugin/jqfu/js/cors/jquery.xdr-transport.js"></script><![endif]-->
+<script type="text/javascript">
+  $('[rel="tooltip"]').tooltip();
+  $('[rel="datepicker"]').datepicker();
+</script>
+{%- endblock bootstrap_js_bottom %}
+{% endblock %}
+
+{%- block style_navbar_padding %}
+{%- endblock style_navbar_padding %}
+
+{% block style -%}
+{{super()}}
+<link rel="stylesheet" href="{{ url_for('lw_admin.static', filename='css/smoothness/jquery-ui-1.10.1.custom.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('lw_admin.static', filename='css/jquery-ui-timepicker-addon.css') }}">
+<style type="text/css">
+  body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+  }
+
+  .form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+       -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+  .form-signin .form-signin-heading,
+  .form-signin .checkbox {
+    margin-bottom: 10px;
+  }
+  .form-signin input[type="text"],
+  .form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+  }
+</style>
+{%- endblock style %}
