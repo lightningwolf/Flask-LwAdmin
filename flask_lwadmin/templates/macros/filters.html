@@ -1,0 +1,40 @@
+{% macro filter() %}
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a href="#filtersBootstrapGeneratorModal" role="button" class="btn" data-toggle="modal"><i
+                class="icon icon-th-list"></i> Filters</a>
+    </div>
+    <div class="btn-group pull-right">
+        <a title="New" class="btn btn-primary " href="{{ url_for('user.user_create') }}"><i
+                class="icon-plus icon-white"></i> New</a>
+    </div>
+</div>
+
+<div class="modal hide" id="filtersBootstrapGeneratorModal" tabindex="-1" role="dialog"
+     aria-labelledby="filtersBootstrapGeneratorModalLabel" aria-hidden="true">
+    <form action="#" method="post" class="form-horizontal" style="margin: 0px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="filtersBootstrapGeneratorModalLabel">Filters</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="user_filters_username">Username</label>
+
+                <div class="controls">
+                    <input type="text" id="user_filters_username" name="user_filters[username][text]" value=""/><br/>
+                    <span class="help-inline" generated="true"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="user_filters[_csrf_token]" value="0825c62c74bad94832403a155f3206ca"
+                   id="user_filters__csrf_token"/>
+            <a class="btn"
+               onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_csrf_token'); m.setAttribute('value', 'd7c16989a573630e2f6d02680d2280ae'); f.appendChild(m);f.submit();return false;"
+               href="#?_reset">{{ gettext('Cancel') }}</a>
+            <input class="btn btn-primary" type="submit" value="{{ gettext('Search') }}"/>
+        </div>
+    </form>
+</div>
+{% endmacro %}

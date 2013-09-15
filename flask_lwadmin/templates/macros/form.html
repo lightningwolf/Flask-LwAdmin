@@ -27,12 +27,12 @@
         {% endfor %}
         <div class="control-group">
           <div class="controls">
-            <input type="submit" class="btn btn-primary btn-large" value="{{ _gettext('Submit') }}" />
+            <input type="submit" class="btn btn-primary btn-large" value="{{ gettext('Submit') }}" />
             {% if extra %}
             {{ extra }}
             {% endif %}
             {% if cancel_url %}
-            <a href="{{ cancel_url }}" class="btn btn-large">{{ _gettext('Cancel') }}</a>
+            <a href="{{ cancel_url }}" class="btn btn-large">{{ gettext('Cancel') }}</a>
             {% endif %}
           </div>
         </div>

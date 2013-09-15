@@ -1,2 +1,2 @@
 #!/bin/sh
-pybabel compile -d ../flask_lwadmin/translations
+pybabel compile -D lw_admin -d ../flask_lwadmin/translations
