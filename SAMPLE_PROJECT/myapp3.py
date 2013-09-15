@@ -3,7 +3,8 @@
 
 from flask import Flask, render_template
 from flask.ext.jqueryuibootstrap import Bootstrap
-from flask.ext.lwadmin import LwAdmin, Navbar, create_navbar_fd
+from flask.ext.lwadmin import LwAdmin
+from flask.ext.lwadmin.navbar import Navbar, create_navbar_fd
 
 app = Flask(__name__)
 Bootstrap(app)
