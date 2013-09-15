@@ -24,7 +24,7 @@
            {{ filter_form.hidden_tag() if filter_form.hidden_tag }}
             <a class="btn"
                onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ filter_form.csrf_token.current_token }}'); f.appendChild(m);f.submit();return false;"
-               href="{{ action }}?_reset">{{ gettext('Cancel') }}</a>
+               href="{{ action }}?action=_reset">{{ gettext('Reset') }}</a>
             <input class="btn btn-primary" type="submit" value="{{ gettext('Search') }}"/>
         </div>
     </form>
