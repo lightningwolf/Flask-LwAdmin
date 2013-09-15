@@ -1,0 +1,26 @@
+{% import 'macros/wtf.html' as wtf %}
+
+{% macro batch_head_row(id) %}
+<th><input id="{{id}}" type="checkbox" onclick="checkAll();" /></th>
+{% endmacro %}
+
+{% macro batch_body_row(class, value) %}
+<td><input type="checkbox" name="ids[]" value="{{ value }}" class="{{ class }}" /></td>
+{% endmacro %}
+
+{% macro batch_script(id, class) %}
+<script type="text/javascript">
+/* <![CDATA[ */
+function checkAll()
+{
+	var boxes = document.getElementsByTagName('input'); for(var index = 0; index < boxes.length; index++) { box = boxes[index]; if (box.type == 'checkbox' && box.className == '{{ class }}') box.checked = document.getElementById('{{ id }}').checked } return true;
+}
+/* ]]> */
+</script>
+{% endmacro %}
+
+{% macro batch_buttons(batch_form) %}
+{{ wtf.inline_field(batch_form.batch_action) }}
+{{ batch_form.hidden_tag() if batch_form.hidden_tag }}
+<input class="btn" type="submit" value="{{ gettext('Run') }}" />
+{% endmacro %}
