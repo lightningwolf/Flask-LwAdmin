@@ -6,7 +6,7 @@ History
 0.3.1 (2013-09-15)
 ++++++++++++++++++
 
-- New macros: filters, batch_actions
+- New macros: filters, batch_actions, actions
 
 0.3.0 (2013-09-15)
 ++++++++++++++++++
