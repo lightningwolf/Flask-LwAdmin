@@ -1,38 +1,30 @@
-{% macro filter() %}
-<div class="btn-toolbar">
-    <div class="btn-group">
-        <a href="#filtersBootstrapGeneratorModal" role="button" class="btn" data-toggle="modal"><i
-                class="icon icon-th-list"></i> Filters</a>
-    </div>
-    <div class="btn-group pull-right">
-        <a title="New" class="btn btn-primary " href="{{ url_for('user.user_create') }}"><i
-                class="icon-plus icon-white"></i> New</a>
-    </div>
-</div>
+{% import 'macros/wtf.html' as wtf %}
 
-<div class="modal hide" id="filtersBootstrapGeneratorModal" tabindex="-1" role="dialog"
-     aria-labelledby="filtersBootstrapGeneratorModalLabel" aria-hidden="true">
-    <form action="#" method="post" class="form-horizontal" style="margin: 0px;">
+{% macro filter_button(id) %}
+<a href="#{{ id }}" role="button" class="btn" data-toggle="modal">
+    <i class="icon icon-th-list"></i> {{ gettext('Filters') }}
+</a>
+{% endmacro %}
+
+{% macro filter_modal(id, filter_form, action) %}
+<div class="modal hide" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}Label" aria-hidden="true">
+    <form action="{{ action }}" method="post" class="form-horizontal" style="margin: 0px;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="filtersBootstrapGeneratorModalLabel">Filters</h3>
+            <h3 id="{{ id }}Label">{{ gettext('Filters') }}</h3>
         </div>
         <div class="modal-body">
-            <div class="control-group">
-                <label class="control-label" for="user_filters_username">Username</label>
+            {{ wtf.form_errors(filter_form, False) }}
 
-                <div class="controls">
-                    <input type="text" id="user_filters_username" name="user_filters[username][text]" value=""/><br/>
-                    <span class="help-inline" generated="true"></span>
-                </div>
-            </div>
+            {% for f in filter_form if f.name != 'csrf_token' and f.name != 'csrf' %}
+            {{ wtf.horizontal_field(f) }}
+            {% endfor %}
         </div>
         <div class="modal-footer">
-            <input type="hidden" name="user_filters[_csrf_token]" value="0825c62c74bad94832403a155f3206ca"
-                   id="user_filters__csrf_token"/>
+           {{ filter_form.hidden_tag() if filter_form.hidden_tag }}
             <a class="btn"
-               onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_csrf_token'); m.setAttribute('value', 'd7c16989a573630e2f6d02680d2280ae'); f.appendChild(m);f.submit();return false;"
-               href="#?_reset">{{ gettext('Cancel') }}</a>
+               onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ filter_form.csrf_token.current_token }}'); f.appendChild(m);f.submit();return false;"
+               href="{{ action }}?_reset">{{ gettext('Cancel') }}</a>
             <input class="btn btn-primary" type="submit" value="{{ gettext('Search') }}"/>
         </div>
     </form>
