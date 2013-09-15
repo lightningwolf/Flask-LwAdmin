@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template
-from flask.ext.jqueryuibootstrap import Bootstrap
+from flask.ext.jqueryuibootstrap import JqueryUiBootstrap
 from flask.ext.lwadmin import LwAdmin
 from flask.ext.lwadmin.navbar import Navbar, create_navbar_fd
 
 app = Flask(__name__)
-Bootstrap(app)
+JqueryUiBootstrap(app)
 
 # LwAdmin
 LwAdmin(app)
