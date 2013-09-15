@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flask-LwAdmin VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-15 15:07+0200\n"
+"POT-Creation-Date: 2013-09-15 22:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,58 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: ../flask_lwadmin/templates/macros/filters.html:35
-#: ../flask_lwadmin/templates/macros/form.html:35
-msgid "Cancel"
+#: ../flask_lwadmin/templates/macros/batch_actions.html:25
+msgid "Run"
 msgstr ""
 
-#: ../flask_lwadmin/templates/macros/filters.html:36
+#: ../flask_lwadmin/templates/macros/filters.html:5
+#: ../flask_lwadmin/templates/macros/filters.html:14
+msgid "Filters"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/filters.html:27
+msgid "Reset"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/filters.html:28
 msgid "Search"
 msgstr ""
 
 #: ../flask_lwadmin/templates/macros/form.html:30
 msgid "Submit"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/form.html:35
+msgid "Cancel"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:4
+msgid "First page"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:5
+msgid "Previous page"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:13
+msgid "Next page"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:14
+msgid "Last page"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:21
+msgid "no result"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:23
+#, python-format
+msgid "result: %(num)d"
+msgstr ""
+
+#: ../flask_lwadmin/templates/macros/pager.html:26
+#, python-format
+msgid "page %(page)s/%(nb_pages)s"
 msgstr ""
 

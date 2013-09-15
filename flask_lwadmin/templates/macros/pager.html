@@ -1,74 +1,28 @@
-{% macro pager(page, pages, generator) -%}
-{% if pages > 1 %}
-<div class="pagination">
+{% macro pager(pager, page, url) -%}
+<div class="pagination pagination-centered">
     <ul>
-    {% set min = page - 3 %}
-    {% set max = page + 3 + 1 %}
-
-    {% if min < 0 %}
-        {% set max = max - min %}
-    {% endif %}
-    {% if max >= pages %}
-        {% set min = min - max + pages %}
-    {% endif %}
-
-    {% if min < 0 %}
-        {% set min = 0 %}
-    {% endif %}
-    {% if max >= pages %}
-        {% set max = pages %}
-    {% endif %}
-
-    {% if min > 0 %}
-    <li>
-        <a href="{{ generator(0) }}">&laquo;</a>
-    </li>
-    {% else %}
-    <li class="disabled">
-        <a href="#">&laquo;</a>
-    </li>
-    {% endif %}
-    {% if page > 0 %}
-    <li>
-        <a href="{{ generator(page-1) }}">&lt;</a>
-    </li>
-    {% else %}
-    <li class="disabled">
-        <a href="#">&lt;</a>
-    </li>
-    {% endif %}
-
-    {% for p in range(min, max) %}
-    {% if page == p %}
-    <li class="active">
-        <a href="#">{{ p + 1 }}</a>
-    </li>
-    {% else %}
-    <li>
-        <a href="{{ generator(p) }}">{{ p + 1 }}</a>
-    </li>
-    {% endif %}
-    {% endfor %}
-
-    {% if page + 1 < pages %}
-    <li>
-        <a href="{{ generator(page + 1) }}">&gt;</a>
-    </li>
-    {% else %}
-    <li class="disabled">
-        <a href="#">&gt;</a>
-    </li>
-    {% endif %}
-    {% if max < pages %}
-    <li>
-        <a href="{{ generator(pages - 1) }}">&raquo;</a>
-    </li>
-    {% else %}
-    <li class="disabled">
-        <a href="#">&raquo;</a>
-    </li>
-    {% endif %}
+        <li><a href="{{ url }}?page=1" title="{{ gettext('First page') }}"><i class="icon-fast-backward"></i></a></li>
+        <li><a href="{{ url }}?page={{ pager.get_previous_page() }}" title="{{ gettext('Previous page') }}"><i class="icon-backward"></i></a></li>
+        {% for page in pager.get_links() %}
+            {% if page == pager.get_page() %}
+        <li class="active disabled"><a href="#">{{ page }}</a></li>
+            {% else %}
+        <li><a href="{{ url }}?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+        <li><a href="{{ url }}?page={{ pager.get_next_page() }}" title="{{ gettext('Next page') }}"><i class="icon-forward"></i></a></li>
+        <li><a href="{{ url }}?page={{ pager.get_last_page() }}" title="{{ gettext('Last page') }}"><i class="icon-fast-forward"></i></a></li>
     </ul>
 </div>
+{%- endmacro %}
+
+{% macro footer(pager) -%}
+{% if pager.get_nb_results() == 0 %}
+{{ gettext('no result') }}
+{% else %}
+{{ ngettext('result: %(num)d', 'results: %(num)d', pager.get_nb_results())|format(num=pager.get_nb_results()) }}
+{% endif %}
+{% if pager.have_to_paginate() %}
+    {{ gettext('page %(page)s/%(nb_pages)s', page=pager.get_page(), nb_pages=pager.get_last_page()) }}
 {% endif %}
 {%- endmacro %}
