@@ -9,6 +9,7 @@ History
 - New navbar methods and class location
 - New macros location
 - Start of Flask-Babel integration
+- Start of Flask-Bootstrap integration
 
 0.2.4 (2013-09-11)
 ++++++++++++++++++

@@ -1,0 +1,18 @@
+{% extends "bootstrap_responsive.html" %}
+{% import 'macros/navbar.html' as navbar_macros with context -%}
+
+{% block body %}
+{{ navbar_macros.navbar() }}
+<div class="container-fluid">
+  <div id="content">
+    {% block container %}{% endblock %}
+  </div>
+</div> <!-- /container -->
+{%- block bootstrap_js_bottom %}
+{{super()}}
+{%- endblock bootstrap_js_bottom %}
+{% endblock body %}
+
+{% block style -%}
+{{super()}}
+{% endblock style %}
