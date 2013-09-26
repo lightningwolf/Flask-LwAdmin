@@ -5,8 +5,8 @@ from math import floor, ceil
 
 class Pager:
 
-    def __init__(self, max_per_page=10):
-        self.page = 1
+    def __init__(self, max_per_page=10, page=1):
+        self.page = page
         self.max_per_page = max_per_page
         self.last_page = 1
         self.nb_results = 0
