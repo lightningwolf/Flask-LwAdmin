@@ -2,7 +2,7 @@
 {% import 'macros/actions.html' as actions_macros %}
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
 {% macro list(configuration, pager, results, delete_action) -%}
-{% if pager.get_nb_results() == 0 %}
+{% if pager.get_nb_results() == 0 or pager.get_results() == None %}
 <p>{{ gettext('No result') }}</p>
 {% else %}
 <table class="table table-hover table-striped">
@@ -21,7 +21,7 @@
     </tr>
     </tfoot>
     <tbody>
-    {% for item in results %}
+    {% for item in pager.get_results() %}
     <tr>
         {% if batch_actions %}
         {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item.id)}}

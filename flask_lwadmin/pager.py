@@ -15,14 +15,23 @@ class Pager:
         self.offset = 0
         self.limit = max_per_page
 
-    def initialize(self, count):
+        self.results = None
+        self.results_counter = 0
+
+    def set_count(self, count):
+        self.results_counter = count
+
+    def set_results(self, results):
+        self.results = results
+
+    def initialize(self):
         has_max_record_limit = (self.get_max_record_limit() is not False)
         max_record_limit = self.get_max_record_limit()
 
         if has_max_record_limit:
-            self.set_nb_results(min(count, max_record_limit))
+            self.set_nb_results(min(self.results_counter, max_record_limit))
         else:
-            self.set_nb_results(count)
+            self.set_nb_results(self.results_counter)
 
         page = self.get_page()
         if (0 == self.get_page()) or (0 == self.get_max_per_page()):
@@ -46,6 +55,10 @@ class Pager:
     def get_limit(self):
         """Return limit for query"""
         return self.limit
+
+    def get_results(self):
+        """Returns an list of results on the given page."""
+        return self.results
 
     def get_max_record_limit(self):
         """Returns the current pager's max record limit."""
