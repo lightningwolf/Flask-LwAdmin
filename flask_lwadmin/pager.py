@@ -50,8 +50,7 @@ class Pager(ConfigParser):
             else:
                 self.limit = self.get_max_per_page()
 
-        self.list_configuration = configuration
-        self.configure()
+        self.configure(configuration)
 
     def get_offset(self):
         """Return offset for query"""

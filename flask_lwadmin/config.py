@@ -3,32 +3,36 @@
 __author__ = 'ldath'
 
 
+from flask_lwadmin import ConfigurationError
+
+
 class ConfigParser:
 
     def __init__(self):
         self.list_configuration = dict(actions=None, batch_actions=None, object_actions=None)
 
-    def configure(self):
-        if 'actions' in self.list_configuration.keys():
-            self.parse_list_actions()
+    def configure(self, configuration):
+        if 'list' in configuration.keys():
+            if 'actions' in configuration['list'].keys():
+                self.parse_list_actions(configuration['list']['actions'])
 
-        if 'batch_actions' in self.list_configuration.keys():
-            self.parse_list_batch_actions()
+            if 'batch_actions' in configuration['list'].keys():
+                self.parse_list_batch_actions(configuration['list']['batch_actions'])
 
-        if 'object_actions' in self.list_configuration.keys():
-            self.parse_list_object_actions()
+            if 'object_actions' in configuration['list'].keys():
+                self.parse_list_object_actions(configuration['list']['object_actions'])
 
-    def parse_list_actions(self):
+    def parse_list_actions(self, configuration):
         pass
 
-    def parse_list_batch_actions(self):
+    def parse_list_batch_actions(self, configuration):
         pass
 
-    def parse_list_object_actions(self):
+    def parse_list_object_actions(self, configuration):
         pass
 
     def get_list_actions(self):
-        return self.list_configuration.get('batch_actions', None)
+        return self.list_configuration.get('actions', None)
 
     def get_list_batch_actions(self):
         return self.list_configuration.get('batch_actions', None)
