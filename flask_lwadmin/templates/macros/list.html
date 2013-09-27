@@ -3,20 +3,26 @@
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
 {% import 'macros/pager.html' as pager_macros %}
 
-{% macro list(configuration, title, pager) -%}
+{% macro list(configuration, title, pager, filter) -%}
     <h1>{{ title }}</h1>
     {{ messages_macros.messages() }}
 
+    {% if filter or pager.get_list_actions() %}
     <div class="btn-toolbar">
         <div class="btn-group">
             {% if filter %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal') }}{%  endif %}
         </div>
+        {% if pager.get_list_actions() %}
         <div class="btn-group pull-right">
-            <a title="New" class="btn btn-primary " href="{{ url_for('user.user_create') }}">
-                <i class="icon-plus icon-white"></i> New
+            {% for action in pager.get_list_actions() %}
+            <a title="New" class="btn btn-primary " href="{{ action.url }}">
+                {% if action.icon  %}<i class="{{ action.icon }}"></i>{% endif %}{% if action.name  %} action.name{% endif %}
             </a>
+            {% endfor %}
         </div>
+        {% endif %}
     </div>
+    {%  endif %}
 
     {% if filter %}
     {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', filter_form=filter, action=url_for('user.user_filter')) }}
@@ -28,9 +34,15 @@
             <div class="btn-group">
                 {% if batch_actions %}{{ batch_actions_macros.batch_buttons(batch_form=batch_actions) }}{% endif %}
             </div>
+            {% if pager.get_list_actions() %}
             <div class="btn-group pull-right">
-                <a title="New" class="btn btn-primary " href="{{ url_for('user.user_create') }}"><i class="icon-plus icon-white"></i> New</a>
+                {% for action in pager.get_list_actions() %}
+                <a title="New" class="btn btn-primary " href="{{ action.url }}">
+                    {% if action.icon  %}<i class="{{ action.icon }}"></i>{% endif %}{% if action.name  %} action.name{% endif %}
+                </a>
+                {% endfor %}
             </div>
-        </div>
+            {% endif %}
+       </div>
     </form>
 {%- endmacro %}
