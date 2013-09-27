@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # coding=utf8
 from math import floor, ceil
+from flask_lwadmin.config import ConfigParser
 
 
-class Pager:
+class Pager(ConfigParser):
 
     def __init__(self, max_per_page=10, page=1):
+        ConfigParser.__init__(self)
         self.page = page
         self.max_per_page = max_per_page
         self.last_page = 1
@@ -24,7 +26,7 @@ class Pager:
     def set_results(self, results):
         self.results = results
 
-    def initialize(self):
+    def initialize(self, configuration):
         has_max_record_limit = (self.get_max_record_limit() is not False)
         max_record_limit = self.get_max_record_limit()
 
@@ -47,6 +49,9 @@ class Pager:
                     self.limit = max_record_limit
             else:
                 self.limit = self.get_max_per_page()
+
+        self.list_configuration = configuration
+        self.configure()
 
     def get_offset(self):
         """Return offset for query"""
