@@ -3,6 +3,7 @@
 __author__ = 'ldath'
 
 from flask import url_for
+from flask_wtf import Form
 from flask_lwadmin import ConfigurationError
 
 
@@ -13,7 +14,13 @@ class ConfigParser:
     URL_METHOD = 3
 
     def __init__(self):
-        self.list_configuration = dict(actions=[], batch_actions=[], object_actions=[])
+        self.list_configuration = dict(
+            actions=[],
+            batch_actions=[],
+            object_actions=[],
+            batch_form={},
+            filter_form={}
+        )
 
     def configure(self, configuration):
         if 'list' in configuration.keys():
@@ -43,7 +50,7 @@ class ConfigParser:
 
     def parse_action(self, action):
         if not all(k in action for k in ('key', 'label')):
-            ConfigurationError('Wrong configuration format for list actions element')
+            raise ConfigurationError('Wrong configuration format for list actions element')
 
         if 'type' not in action.keys():
             action['type'] = self.NO_URL
@@ -59,15 +66,12 @@ class ConfigParser:
             pre = action.copy()
             if pre['type'] == self.URL_INTERNAL:
                 pre['url'] = url_for(pre['url'])
+            if pre['key'] == 'delete':
+                pre['form'] = Form()
             yield pre
 
     def get_list_batch_actions(self):
-        actions = self.list_configuration.get('batch_actions', [])
-        for action in actions:
-            pre = action.copy()
-            if pre['type'] == self.URL_INTERNAL:
-                pre['url'] = url_for(pre['url'])
-            yield pre
+        return self.list_configuration.get('batch_actions', [])
 
     def get_list_object_actions(self):
         actions = self.list_configuration.get('object_actions', [])
