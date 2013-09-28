@@ -8,8 +8,8 @@ class Pager(ConfigParser):
 
     def __init__(self, max_per_page=10, page=1):
         ConfigParser.__init__(self)
-        self.page = page
-        self.max_per_page = max_per_page
+        self.page = int(page)
+        self.max_per_page = int(max_per_page)
         self.last_page = 1
         self.nb_results = 0
         self.current_max_link = 1
@@ -143,6 +143,7 @@ class Pager(ConfigParser):
         """Sets the number of results."""
         self.nb_results = nb
 
+    @property
     def get_first_page(self):
         """Returns the first page number."""
         return 1
@@ -167,7 +168,7 @@ class Pager(ConfigParser):
 
     def get_previous_page(self):
         """Returns the previous page."""
-        return max((self.get_page() - 1), self.get_first_page())
+        return max((self.get_page() - 1), self.get_first_page)
 
     def set_page(self, page):
         """Sets the current page."""

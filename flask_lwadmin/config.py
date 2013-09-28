@@ -51,16 +51,28 @@ class ConfigParser:
         if 'credential' not in action.keys():
             action['credential'] = None
 
-        if action['type'] == self.URL_INTERNAL:
-            action['url'] = url_for(action['url'])
-
         return action
 
     def get_list_actions(self):
-        return self.list_configuration.get('actions', [])
+        actions = self.list_configuration.get('actions', [])
+        for action in actions:
+            pre = action.copy()
+            if pre['type'] == self.URL_INTERNAL:
+                pre['url'] = url_for(pre['url'])
+            yield pre
 
     def get_list_batch_actions(self):
-        return self.list_configuration.get('batch_actions', [])
+        actions = self.list_configuration.get('batch_actions', [])
+        for action in actions:
+            pre = action.copy()
+            if pre['type'] == self.URL_INTERNAL:
+                pre['url'] = url_for(pre['url'])
+            yield pre
 
     def get_list_object_actions(self):
-        return self.list_configuration.get('object_actions', [])
+        actions = self.list_configuration.get('object_actions', [])
+        for action in actions:
+            pre = action.copy()
+            if pre['type'] == self.URL_INTERNAL:
+                pre['url'] = url_for(pre['url'])
+            yield pre
