@@ -1,44 +1,36 @@
 {% import 'macros/messages.html' as messages_macros with context -%}
 {% import 'macros/filters.html' as filters_macros %}
+{% import 'macros/list_actions.html' as list_actions_macros %}
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
 {% import 'macros/pager.html' as pager_macros %}
 
-{% macro list(configuration, title, pager, filter) -%}
+{% macro list(title, configuration, pager) -%}
     <h1>{{ title }}</h1>
+
     {{ messages_macros.messages() }}
 
-    {% if filter or pager.get_list_actions() %}
+    {% if pager.is_filter() or pager.is_list_actions() %}
     <div class="btn-toolbar">
         <div class="btn-group">
-            {% if filter %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal') }}{%  endif %}
+            {% if pager.is_filter() %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal') }}{%  endif %}
         </div>
-        {% if pager.get_list_actions() %}
-        <div class="btn-group pull-right">
-            {% for action in pager.get_list_actions() %}
-            <a title="{{ action['label'] }}" class="btn btn-primary " href="{{ action['url'] }}">{% if action['icon']  %}<i class="{{ action['icon'] }}"></i>{% endif %}{% if action['label'] and not action['only_icon'] %}{{ action['label'] }}{% endif %}</a>
-            {% endfor %}
-        </div>
-        {% endif %}
+        {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(pager=pager) }}{% endif %}
     </div>
     {%  endif %}
 
-    {% if filter %}
-    {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', filter_form=filter, action=url_for('user.user_filter')) }}
+    {% if pager.is_filter() %}
+    {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', filter=pager.get_filter()) }}
     {%  endif %}
 
     <form class="form-inline" action="{{ url_for('user.user_batch') }}" method="post">
         {{ pager_macros.get_list(configuration=configuration, pager=pager) }}
+        {% if pager.is_batch() or pager.is_list_actions() %}
         <div class="btn-toolbar">
             <div class="btn-group">
-                {% if batch_actions %}{{ batch_actions_macros.batch_buttons(batch_form=batch_actions) }}{% endif %}
+                {% if pager.is_batch() %}{{ batch_actions_macros.batch_buttons(batch_form=batch_actions) }}{% endif %}
             </div>
-            {% if pager.get_list_actions() %}
-            <div class="btn-group pull-right">
-                {% for action in pager.get_list_actions() %}
-                <a title="{{ action['label'] }}" class="btn btn-primary " href="{{ action['url'] }}">{% if action['icon']  %}<i class="{{ action['icon'] }}"></i>{% endif %}{% if action['label'] and not action['only_icon'] %}{{ action['label'] }}{% endif %}</a>
-                {% endfor %}
-            </div>
-            {% endif %}
+            {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(pager=pager) }}{% endif %}
        </div>
+        {%  endif %}
     </form>
 {%- endmacro %}

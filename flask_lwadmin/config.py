@@ -16,10 +16,9 @@ class ConfigParser:
     def __init__(self):
         self.list_configuration = dict(
             actions=[],
-            batch_actions=[],
             object_actions=[],
-            batch_form={},
-            filter_form={}
+            batch={},
+            filter={}
         )
 
     def configure(self, configuration):
@@ -27,21 +26,19 @@ class ConfigParser:
             if 'actions' in configuration['list'].keys():
                 self.parse_list_actions(configuration['list']['actions'])
 
-            if 'batch_actions' in configuration['list'].keys():
-                self.parse_list_batch_actions(configuration['list']['batch_actions'])
-
             if 'object_actions' in configuration['list'].keys():
                 self.parse_list_object_actions(configuration['list']['object_actions'])
+
+            if 'batch' in configuration['list'].keys():
+                self.parse_batch(configuration['list']['batch'])
+
+            if 'filter' in configuration['list'].keys():
+                self.parse_filter(configuration['list']['filter'])
 
     def parse_list_actions(self, actions):
         for action in actions:
             parsed = self.parse_action(action)
             self.list_configuration['actions'].append(parsed)
-
-    def parse_list_batch_actions(self, actions):
-        for action in actions:
-            parsed = self.parse_action(action)
-            self.list_configuration['batch_actions'].append(parsed)
 
     def parse_list_object_actions(self, actions):
         for action in actions:
@@ -60,6 +57,15 @@ class ConfigParser:
 
         return action
 
+    def parse_batch(self, batch_elemet):
+        pass
+
+    def parse_filter(self, filter_elemet):
+        pass
+
+    def is_list_actions(self):
+        return True if self.list_configuration.get('actions', []) else False
+
     def get_list_actions(self):
         actions = self.list_configuration.get('actions', [])
         for action in actions:
@@ -70,8 +76,8 @@ class ConfigParser:
                 pre['form'] = Form()
             yield pre
 
-    def get_list_batch_actions(self):
-        return self.list_configuration.get('batch_actions', [])
+    def is_list_object_actions(self):
+        return True if self.list_configuration.get('object_actions', []) else False
 
     def get_list_object_actions(self):
         actions = self.list_configuration.get('object_actions', [])
@@ -80,3 +86,9 @@ class ConfigParser:
             if pre['type'] == self.URL_INTERNAL:
                 pre['url'] = url_for(pre['url'])
             yield pre
+
+    def is_batch(self):
+        return True if self.list_configuration.get('batch', {}) else False
+
+    def is_filter(self):
+        return True if self.list_configuration.get('filter', {}) else False
