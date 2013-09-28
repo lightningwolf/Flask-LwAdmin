@@ -43,24 +43,24 @@ class Navbar(object):
         item['caret'] = caret
         self._items[key] = item
 
-    def add_menu_item(self, key, label, url=None, type=None, credential=None, disabled=False):
-        self.__create_base_item(key, label, url, type, credential, disabled)
+    def add_menu_item(self, key, label, url=None, item_type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, item_type, credential, disabled)
         self._items[key]['dropdown'] = []
         self._navbar['items'].append(key)
 
-    def add_profile_item(self, key, label, url=None, type=None, credential=None, disabled=False):
-        self.__create_base_item(key, label, url, type, credential, disabled)
+    def add_profile_item(self, key, label, url=None, item_type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, item_type, credential, disabled)
         self._items[key]['dropdown'] = []
         self._navbar['profile'].append(key)
 
-    def add_group_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
-        self.__create_base_item(key, label, url, type, credential, disabled)
+    def add_group_item(self, parent_key, key, label, url=None, item_type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, item_type, credential, disabled)
         self._items[key]['parent'] = parent_key
         self._items[key]['dropdown'] = []
         self._items[parent_key]['group'].append(key)
 
-    def add_dropdown_item(self, parent_key, key, label, url=None, type=None, credential=None, disabled=False):
-        self.__create_base_item(key, label, url, type, credential, disabled)
+    def add_dropdown_item(self, parent_key, key, label, url=None, item_type=None, credential=None, disabled=False):
+        self.__create_base_item(key, label, url, item_type, credential, disabled)
         self._items[key]['parent'] = parent_key
         self._items[parent_key]['dropdown'].append(key)
 
@@ -99,23 +99,33 @@ class Navbar(object):
 
         return item
 
-    def __create_base_item(self, key, label, url=None, type=None, credential=None, disabled=False):
+    def __create_base_item(self, key, label, url=None, item_type=None, credential=None, disabled=False):
         self.__check_key(key)
-        if type is self.GROUP:
+        if item_type is self.GROUP:
             self.__create_group_element(key)
         else:
-            self.__create_normal_element(key, label, url, type, credential, disabled)
+            self.__create_normal_element(key, label, url, item_type, credential, disabled)
 
     def __create_group_element(self, key):
         item = {'type': self.GROUP, 'group': []}
         self._keys.append(key)
         self._items[key] = item
 
-    def __create_normal_element(self, key, label, url, type, credential=None, disabled=False):
-        if type == self.NO_URL:
+    def __create_normal_element(self, key, label, url, item_type, credential=None, disabled=False):
+        if item_type == self.NO_URL:
             url = '#'
 
-        item = {'label': label, 'type': type, 'url': url, 'disabled': disabled, 'active': False, 'icon': None, 'only_icon': False, 'hidden': False, 'caret': False}
+        item = {
+            'label': label,
+            'type': item_type,
+            'url': url,
+            'disabled': disabled,
+            'active': False,
+            'icon': None,
+            'only_icon': False,
+            'hidden': False,
+            'caret': False
+        }
         if credential is not None and self._permissions is not None:
             if credential in self._permissions.keys():
                 user_permissions = self._permissions[credential]
@@ -129,7 +139,8 @@ class Navbar(object):
             ConfigurationError('This key: %s is not unique' % key)
         return True
 
-    def __is_hidden(self, user_permission=None):
+    @staticmethod
+    def __is_hidden(user_permission):
         if user_permission is not None:
             if not user_permission.can():
                 return True
@@ -225,7 +236,6 @@ def add_menu_item(navbar, item):
     if 'dropdown' in item.keys():
         for subitem in item['dropdown']:
             add_dropdown_item(navbar, item['key'], subitem)
-
 
 
 def add_profile_item(navbar, item):
