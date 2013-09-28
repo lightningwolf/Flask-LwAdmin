@@ -61,7 +61,13 @@ class ConfigParser:
         pass
 
     def parse_filter(self, filter_elemet):
-        pass
+        if not all(k in filter_elemet for k in ('url', 'form')):
+            raise ConfigurationError('Wrong configuration format for list filter element')
+
+        if 'type' not in filter_elemet.keys():
+            filter_elemet['type'] = self.NO_URL
+
+        self.list_configuration['filter'] = filter_elemet
 
     def is_list_actions(self):
         return True if self.list_configuration.get('actions', []) else False
@@ -92,3 +98,12 @@ class ConfigParser:
 
     def is_filter(self):
         return True if self.list_configuration.get('filter', {}) else False
+
+    def get_filter(self):
+        filter_elemet = self.list_configuration.get('filter', {})
+        print filter_elemet
+
+        pre = filter_elemet.copy()
+        if pre['type'] == self.URL_INTERNAL:
+            pre['url'] = url_for(pre['url'])
+        return pre

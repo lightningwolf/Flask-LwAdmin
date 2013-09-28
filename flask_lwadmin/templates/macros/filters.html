@@ -6,25 +6,25 @@
 </a>
 {% endmacro %}
 
-{% macro filter_modal(id, filter_form, action) %}
+{% macro filter_modal(id, url, form) %}
 <div class="modal hide" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}Label" aria-hidden="true">
-    <form action="{{ action }}" method="post" class="form-horizontal" style="margin: 0px;">
+    <form action="{{ url }}" method="post" class="form-horizontal" style="margin: 0px;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="{{ id }}Label">{{ gettext('Filters') }}</h3>
         </div>
         <div class="modal-body">
-            {{ wtf.form_errors(filter_form, False) }}
+            {{ wtf.form_errors(form, False) }}
 
-            {% for f in filter_form if f.name != 'csrf_token' and f.name != 'csrf' %}
+            {% for f in form if f.name != 'csrf_token' and f.name != 'csrf' %}
             {{ wtf.horizontal_field(f) }}
             {% endfor %}
         </div>
         <div class="modal-footer">
-           {{ filter_form.hidden_tag() if filter_form.hidden_tag }}
+           {{ form.hidden_tag() if form.hidden_tag }}
             <a class="btn"
-               onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ filter_form.csrf_token.current_token }}'); f.appendChild(m);f.submit();return false;"
-               href="{{ action }}?action=_reset">{{ gettext('Reset') }}</a>
+               onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ form.csrf_token.current_token }}'); f.appendChild(m);f.submit();return false;"
+               href="{{ url }}?action=_reset">{{ gettext('Reset') }}</a>
             <input class="btn btn-primary" type="submit" value="{{ gettext('Search') }}"/>
         </div>
     </form>

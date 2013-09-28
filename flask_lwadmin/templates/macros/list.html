@@ -19,8 +19,10 @@
     {%  endif %}
 
     {% if pager.is_filter() %}
-    {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', filter=pager.get_filter()) }}
-    {%  endif %}
+        {% set filter_element = pager.get_filter() %}
+        {{ filter_element['url'] }}
+        {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', url=filter_element['url'], form=filter_element['form']) }}
+    {% endif %}
 
     <form class="form-inline" action="{{ url_for('user.user_batch') }}" method="post">
         {{ pager_macros.get_list(configuration=configuration, pager=pager) }}
