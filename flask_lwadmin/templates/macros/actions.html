@@ -1,5 +1,10 @@
-{% macro delete_action(delete_form, url) %}
-<a title="Delete" class="btn btn-danger btn-small" onclick="if (confirm('Are you sure?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'method'); m.setAttribute('value', 'delete'); f.appendChild(m);var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ delete_form.csrf_token.current_token }}'); f.appendChild(m);f.submit(); };return false;" href="{{ url }}"><i class="icon-trash icon-white">
+{% macro action(action_element, id) %}
+<a title="Edit" class="btn btn-small" href="{{ url_for(action_element['url'], id=id) }}">
+    <i class="icon-edit"></i> Edit
+</a>
+{% endmacro %}
+{% macro delete_action(action_element, id) %}
+<a title="Delete" class="btn btn-danger btn-small" onclick="if (confirm('Are you sure?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'method'); m.setAttribute('value', 'delete'); f.appendChild(m);var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ action_element['form'].csrf_token.current_token }}'); f.appendChild(m);f.submit(); };return false;" href="{{ url_for(action_element['url'], id=id) }}"><i class="icon-trash icon-white">
     </i> Delete
 </a>
 {% endmacro %}

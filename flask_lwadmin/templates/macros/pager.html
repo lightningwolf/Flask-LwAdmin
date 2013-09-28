@@ -3,39 +3,41 @@
 {% macro get_list(configuration, pager) -%}
 {% if pager.get_nb_results() == 0 or pager.get_results() == None %}
 <p>{{ gettext('No result') }}</p>
-{% else %}
+{% else %}{% set pk = pager.get_pk() %}{% set elements = pager.get_list_display() %}{% set cols = elements|count + 2 if pager.is_batch() else elements|count + 1 %}
 <table class="table table-hover table-striped">
     <thead>
     <tr>
         {% if pager.is_batch() %}{{ batch_actions_macros.batch_head_row(id='lw_admin_list_batch_checkbox') }}{% endif %}
-        <th>Id</th>
-        <th>Username</th>
-        <th>E-mail</th>
+        {% for element in elements %}
+        <th>{{ element['label'] }}</th>
+        {% endfor %}
         <th>Actions</th>
     </tr>
     </thead>
     <tfoot>
     <tr>
-        <th colspan="{% if pager.is_batch() %}5{% else %}4{%  endif %}">{{ get_footer(pager) }}</th>
+        <th colspan="{{ cols }}">{{ get_footer(pager) }}</th>
     </tr>
     </tfoot>
     <tbody>
     {% for item in pager.get_results() %}
     <tr>
         {% if pager.is_batch() %}
-        {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item.id)}}
+        {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item[pk['key']])}}
         {% endif %}
-        <td>{{ item.id }}</td>
-        <td>{{ item.username }}</td>
-        <td>{{ item.email }}</td>
+        {% for element in elements %}
+        <td>{{ item[element['key']] }}</td>
+        {% endfor %}
         <td>
             <div class="btn-group pull-right">
-                <a title="Edit" class="btn btn-small" href="{{ url_for('user.user_edit', id=item.id) }}">
-                    <i class="icon-edit"></i> Edit
-                </a>
-                {% if delete_action %}{% if item.username != current_user.get_username() %}
-                {{ actions_macros.delete_action(delete_form=delete_action, url=url_for('user.user_del', id=item.id)) }}
-                {% endif %}{% endif %}
+                {% for action_element in pager.get_list_object_actions() %}
+                    {% if action_element['key'] == 'delete' %}
+                        {{ actions_macros.delete_action(action_element=action_element, id=item[pk['key']]) }}
+                    {% else %}
+                        {{ actions_macros.action(action_element=action_element, id=item[pk['key']]) }}
+                    {% endif %}
+                {% endfor %}
+
             </div>
         </td>
     </tr>

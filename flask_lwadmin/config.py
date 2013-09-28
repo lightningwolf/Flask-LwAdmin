@@ -12,9 +12,12 @@ class ConfigParser:
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
     URL_METHOD = 3
+    URL_PK = 4
 
     def __init__(self):
         self.list_configuration = dict(
+            id={},
+            display=[],
             actions=[],
             object_actions=[],
             batch={},
@@ -23,6 +26,14 @@ class ConfigParser:
 
     def configure(self, configuration):
         if 'list' in configuration.keys():
+            if 'pk' not in configuration['list'].keys():
+                raise ConfigurationError('Not set list pk element')
+
+            self.parse_list_pk(configuration['list']['pk'])
+
+            if 'display' in configuration['list'].keys():
+                self.parse_list_display(configuration['list']['display'])
+
             if 'actions' in configuration['list'].keys():
                 self.parse_list_actions(configuration['list']['actions'])
 
@@ -34,6 +45,18 @@ class ConfigParser:
 
             if 'filter' in configuration['list'].keys():
                 self.parse_filter(configuration['list']['filter'])
+
+    def parse_list_pk(self, pk):
+        if 'key' not in pk:
+            raise ConfigurationError('Wrong configuration format for key pk element')
+
+        self.list_configuration['pk'] = pk
+
+    def parse_list_display(self, elements):
+        for element in elements:
+            if not all(k in element for k in ('key', 'label')):
+                raise ConfigurationError('Wrong configuration format for list display element')
+            self.list_configuration['display'].append(element)
 
     def parse_list_actions(self, actions):
         for action in actions:
@@ -78,14 +101,19 @@ class ConfigParser:
     def is_list_actions(self):
         return True if self.list_configuration.get('actions', []) else False
 
+    def get_pk(self):
+        return self.list_configuration.get('pk')
+
+    def get_list_display(self):
+        return self.list_configuration.get('display', [])
+
     def get_list_actions(self):
         actions = self.list_configuration.get('actions', [])
         for action in actions:
             pre = action.copy()
             if pre['type'] == self.URL_INTERNAL:
                 pre['url'] = url_for(pre['url'])
-            if pre['key'] == 'delete':
-                pre['form'] = Form()
+
             yield pre
 
     def is_list_object_actions(self):
@@ -97,6 +125,10 @@ class ConfigParser:
             pre = action.copy()
             if pre['type'] == self.URL_INTERNAL:
                 pre['url'] = url_for(pre['url'])
+
+            if pre['key'] == 'delete':
+                pre['form'] = Form()
+
             yield pre
 
     def is_batch(self):
