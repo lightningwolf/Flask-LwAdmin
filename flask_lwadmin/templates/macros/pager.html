@@ -7,7 +7,7 @@
 <table class="table table-hover table-striped">
     <thead>
     <tr>
-        {% if batch_actions %}{{ batch_actions_macros.batch_head_row(id='lw_admin_list_batch_checkbox') }}{% endif %}
+        {% if pager.is_batch() %}{{ batch_actions_macros.batch_head_row(id='lw_admin_list_batch_checkbox') }}{% endif %}
         <th>Id</th>
         <th>Username</th>
         <th>E-mail</th>
@@ -16,13 +16,13 @@
     </thead>
     <tfoot>
     <tr>
-        <th colspan="{% if batch_actions %}5{% else %}4{%  endif %}">{{ get_footer(pager) }}</th>
+        <th colspan="{% if pager.is_batch() %}5{% else %}4{%  endif %}">{{ get_footer(pager) }}</th>
     </tr>
     </tfoot>
     <tbody>
     {% for item in pager.get_results() %}
     <tr>
-        {% if batch_actions %}
+        {% if pager.is_batch() %}
         {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item.id)}}
         {% endif %}
         <td>{{ item.id }}</td>
@@ -43,7 +43,7 @@
     </tbody>
 </table>
 {% if pager.have_to_paginate %}{{ get_pager(pager=pager, page=page, url=url_for('user.user_list')) }}{% endif %}
-{% if batch_actions %}{{ batch_actions_macros.batch_script(id='lw_admin_list_batch_checkbox', class='lw_admin_batch_checkbox') }}{%  endif %}
+{% if pager.is_batch() %}{{ batch_actions_macros.batch_script(id='lw_admin_list_batch_checkbox', class='lw_admin_batch_checkbox') }}{%  endif %}
 {% endif %}
 {%- endmacro %}
 

@@ -58,7 +58,13 @@ class ConfigParser:
         return action
 
     def parse_batch(self, batch_elemet):
-        pass
+        if not all(k in batch_elemet for k in ('url', 'form')):
+            raise ConfigurationError('Wrong configuration format for list filter element')
+
+        if 'type' not in batch_elemet.keys():
+            batch_elemet['type'] = self.NO_URL
+
+        self.list_configuration['batch'] = batch_elemet
 
     def parse_filter(self, filter_elemet):
         if not all(k in filter_elemet for k in ('url', 'form')):
@@ -96,12 +102,19 @@ class ConfigParser:
     def is_batch(self):
         return True if self.list_configuration.get('batch', {}) else False
 
+    def get_batch(self):
+        batch_elemet = self.list_configuration.get('batch', {})
+
+        pre = batch_elemet.copy()
+        if pre['type'] == self.URL_INTERNAL:
+            pre['url'] = url_for(pre['url'])
+        return pre
+
     def is_filter(self):
         return True if self.list_configuration.get('filter', {}) else False
 
     def get_filter(self):
         filter_elemet = self.list_configuration.get('filter', {})
-        print filter_elemet
 
         pre = filter_elemet.copy()
         if pre['type'] == self.URL_INTERNAL:

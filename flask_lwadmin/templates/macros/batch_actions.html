@@ -19,8 +19,8 @@ function checkAll()
 </script>
 {% endmacro %}
 
-{% macro batch_buttons(batch_form) %}
-{{ wtf.inline_field(batch_form.batch_action) }}
-{{ batch_form.hidden_tag() if batch_form.hidden_tag }}
+{% macro batch_buttons(form) %}
+{{ wtf.inline_field(form.batch_action) }}
+{{ form.hidden_tag() if form.hidden_tag }}
 <input class="btn" type="submit" value="{{ gettext('Run') }}" />
 {% endmacro %}

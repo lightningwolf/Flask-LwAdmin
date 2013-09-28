@@ -20,19 +20,18 @@
 
     {% if pager.is_filter() %}
         {% set filter_element = pager.get_filter() %}
-        {{ filter_element['url'] }}
         {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', url=filter_element['url'], form=filter_element['form']) }}
     {% endif %}
 
-    <form class="form-inline" action="{{ url_for('user.user_batch') }}" method="post">
+    {% if pager.is_batch() %}{% set batch_element = pager.get_batch() %}<form class="form-inline" action="{{ batch_element['url'] }}" method="post">{% endif %}
         {{ pager_macros.get_list(configuration=configuration, pager=pager) }}
         {% if pager.is_batch() or pager.is_list_actions() %}
         <div class="btn-toolbar">
             <div class="btn-group">
-                {% if pager.is_batch() %}{{ batch_actions_macros.batch_buttons(batch_form=batch_actions) }}{% endif %}
+                {% if pager.is_batch() %}{{ batch_actions_macros.batch_buttons(form=batch_element['form']) }}{% endif %}
             </div>
             {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(pager=pager) }}{% endif %}
        </div>
         {%  endif %}
-    </form>
+    {% if pager.is_batch() %}</form>{% endif %}
 {%- endmacro %}
