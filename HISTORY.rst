@@ -3,6 +3,13 @@
 History
 -------
 
+0.4.0 (2013-09-29)
+++++++++++++++++++
+
+- Generators for list type page using Pager - first version for configuration API (example in Lightningwolf-SMP Projekct)
+- API change for Pager
+- API change for methods in Navbar class
+
 0.3.2 (2013-09-15)
 ++++++++++++++++++
 
