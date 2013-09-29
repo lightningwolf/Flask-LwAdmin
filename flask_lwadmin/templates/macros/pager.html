@@ -32,9 +32,9 @@
             <div class="btn-group pull-right">
                 {% for action_element in pager.get_list_object_actions() %}
                     {% if action_element['key'] == 'delete' %}
-                        {{ actions_macros.delete_action(action_element=action_element, id=item[pk['key']]) }}
+                        {{ actions_macros.delete_action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class='btn btn-small') }}
                     {% else %}
-                        {{ actions_macros.action(action_element=action_element, id=item[pk['key']]) }}
+                        {{ actions_macros.action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class='btn btn-danger btn-small') }}
                     {% endif %}
                 {% endfor %}
 

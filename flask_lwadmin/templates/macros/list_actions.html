@@ -1,7 +1,9 @@
-{% macro list_actions(pager) %}
+{% import 'macros/actions.html' as actions_macros %}
+
+{% macro list_actions(list_actions) %}
     <div class="btn-group pull-right">
-        {% for action in pager.get_list_actions() %}
-        <a title="{{ action['label'] }}" class="btn btn-primary " href="{{ action['url'] }}">{% if action['icon']  %}<i class="{{ action['icon'] }}"></i>{% endif %}{% if action['label'] and not action['only_icon'] %}{{ action['label'] }}{% endif %}</a>
+        {% for action_element in list_actions %}
+            {{ actions_macros.action(action_element=action_element, url=action_element['url'], class='btn btn-primary') }}
         {% endfor %}
     </div>
 {%- endmacro %}

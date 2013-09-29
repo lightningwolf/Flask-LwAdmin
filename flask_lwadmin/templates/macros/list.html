@@ -14,7 +14,7 @@
         <div class="btn-group">
             {% if pager.is_filter() %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal') }}{%  endif %}
         </div>
-        {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(pager=pager) }}{% endif %}
+        {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(list_actions=pager.get_list_actions()) }}{% endif %}
     </div>
     {%  endif %}
 
@@ -30,7 +30,7 @@
             <div class="btn-group">
                 {% if pager.is_batch() %}{{ batch_actions_macros.batch_buttons(form=batch_element['form']) }}{% endif %}
             </div>
-            {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(pager=pager) }}{% endif %}
+            {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(list_actions=pager.get_list_actions()) }}{% endif %}
        </div>
         {%  endif %}
     {% if pager.is_batch() %}</form>{% endif %}
