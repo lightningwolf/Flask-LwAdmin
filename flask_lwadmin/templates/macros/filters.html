@@ -1,10 +1,10 @@
 {% import 'macros/wtf.html' as wtf %}
 
-{% macro filter_button(id, class='btn') %}
+{% macro filter_button(id, class='btn') -%}
 <a href="#{{ id }}" role="button" class="{{ class }}" data-toggle="modal"><i class="icon icon-th-list"></i> {{ gettext('Filters') }}</a>
-{% endmacro %}
+{%- endmacro %}
 
-{% macro filter_modal(id, url, form) %}
+{% macro filter_modal(id, url, form) -%}
 <div class="modal hide" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}Label" aria-hidden="true">
     <form action="{{ url }}" method="post" class="form-horizontal" style="margin: 0px;">
         <div class="modal-header">
@@ -27,4 +27,4 @@
         </div>
     </form>
 </div>
-{% endmacro %}
+{%- endmacro %}

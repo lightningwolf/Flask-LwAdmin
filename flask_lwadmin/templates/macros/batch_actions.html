@@ -1,14 +1,14 @@
 {% import 'macros/wtf.html' as wtf %}
 
-{% macro batch_head_row(id) %}
+{% macro batch_head_row(id) -%}
 <th><input id="{{id}}" type="checkbox" onclick="checkAll();" /></th>
-{% endmacro %}
+{%- endmacro %}
 
-{% macro batch_body_row(class, value) %}
+{% macro batch_body_row(class, value) -%}
 <td><input type="checkbox" name="ids[]" value="{{ value }}" class="{{ class }}" /></td>
-{% endmacro %}
+{%- endmacro %}
 
-{% macro batch_script(id, class) %}
+{% macro batch_script(id, class) -%}
 <script type="text/javascript">
 /* <![CDATA[ */
 function checkAll()
@@ -17,10 +17,10 @@ function checkAll()
 }
 /* ]]> */
 </script>
-{% endmacro %}
+{%- endmacro %}
 
-{% macro batch_buttons(form) %}
+{% macro batch_buttons(form) -%}
 {{ wtf.inline_field(form.batch_action) }}
 {{ form.hidden_tag() if form.hidden_tag }}
 <input class="btn" type="submit" value="{{ gettext('Run') }}" />
-{% endmacro %}
+{%- endmacro %}

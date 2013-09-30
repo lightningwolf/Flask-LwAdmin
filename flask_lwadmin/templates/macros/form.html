@@ -40,7 +40,7 @@
         </div>
       </fieldset>
     </form>
-{% endmacro %}
+{%- endmacro %}
 
 {% macro generate_elements(form, display_blocks) -%}
     {{ form.hidden_tag() if form.hidden_tag }}
@@ -51,4 +51,4 @@
         {{ wtf.horizontal_field(form[field]) }}
         {% endfor %}
     {% endfor %}
-{% endmacro %}
+{%- endmacro %}

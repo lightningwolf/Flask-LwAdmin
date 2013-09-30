@@ -1,4 +1,4 @@
-{% macro navbar() %}
+{% macro navbar() -%}
     {% if lw_navbar %}
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
@@ -29,9 +29,9 @@
     </div>
 </div>
     {% endif %}
-{% endmacro %}
+{%- endmacro %}
 
-{% macro navbar_items(items, pull='') %}
+{% macro navbar_items(items, pull='') -%}
     {% for item in items if not item.hidden %}
 <li class="{% if item.active %}active {% endif %}{% if item.dropdown|length > 0 %}dropdown {% endif %}">
     {% if item.group %}
@@ -45,9 +45,9 @@
     {% endif %}
 </li>
     {% endfor %}
-{% endmacro %}
+{%- endmacro %}
 
-{% macro navbar_link(item, class='') %}
+{% macro navbar_link(item, class='') -%}
     {% if item.dropdown|length > 0 %}
 <a href="{{item.url}}" data-toggle="dropdown" class="{{ class }} dropdown-toggle">{{ navbar_link_body(item) }}</a>
 <ul class="dropdown-menu">
@@ -60,8 +60,8 @@
     {% else %}
 <a href="{{item.url}}" title="{{item.label}}" class="{{ class }}">{{ navbar_link_body(item) }}</a>
     {% endif %}
-{% endmacro %}
+{%- endmacro %}
 
-{% macro navbar_link_body(item) %}
+{% macro navbar_link_body(item) -%}
 {% if item.icon %}<i class="{{item.icon}}"></i>{% endif %}{% if not item.only_icon %}{% if item.icon %} {% endif %}{{item.label}}{% endif %}{% if item.caret %}<span class="caret"></span>{% endif %}
-{% endmacro %}
+{%- endmacro %}
