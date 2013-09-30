@@ -1,0 +1,21 @@
+{% import 'macros/messages.html' as messages_macros with context -%}
+{% import 'macros/form.html' as form_macros with context -%}
+
+{% macro update(title, configuration) -%}
+    <h1>{{ title }}</h1>
+    {{ messages_macros.messages() }}
+    <form class="form-horizontal" method="post" action="{{ configuration['url'] }}">
+        {{ form_macros.generate_elements(configuration['form'], configuration['display_blocks']) }}
+        <div class="form-actions">
+            <div class="btn-group pull-left">
+                <input class="btn btn-primary" type="submit" value="Save" />
+                <input class="btn btn-primary" type="submit" value="Save and Add" name="_save_and_add" />
+            </div>
+            <div class="btn-group pull-right">
+                {% for action_element in configuration['actions'] %}
+                <a title="{{ action_element['label'] }}" class="btn btn-warning" href="{{ action_element['url'] }}"><i class="icon-backward"></i> {{ action_element['label'] }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+{%- endmacro %}

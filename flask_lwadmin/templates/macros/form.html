@@ -1,3 +1,5 @@
+{% import 'jqueryuibootstrap_wtf.html' as wtf %}
+
 {% macro render_form(form, cancel_url, extra=None) -%}
     <form action="" method="POST" class="form-horizontal"{% if form.has_file_field %} enctype="multipart/form-data"{% endif %}>
       <fieldset>
@@ -38,4 +40,15 @@
         </div>
       </fieldset>
     </form>
+{% endmacro %}
+
+{% macro generate_elements(form, display_blocks) -%}
+    {{ form.hidden_tag() if form.hidden_tag }}
+    {{ wtf.form_errors(form, False) }}
+    {% for display_element in display_blocks %}
+        {% if display_element['legend'] %}<legend>{{ display_element['legend'] }}</legend>{% endif %}
+        {% for field in display_element['display'] %}
+        {{ wtf.horizontal_field(form[field]) }}
+        {% endfor %}
+    {% endfor %}
 {% endmacro %}
