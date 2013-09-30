@@ -78,6 +78,15 @@ class ConfigParser:
         if 'credential' not in action.keys():
             action['credential'] = None
 
+        if 'confirm' not in action.keys():
+            action['confirm'] = False
+
+        if 'confirm_message' not in action.keys():
+            action['confirm_message'] = 'Are you sure?'
+
+        if 'class' not in action.keys():
+            action['class'] = 'btn btn-small'
+
         return action
 
     def parse_batch(self, batch_elemet):
