@@ -3,7 +3,7 @@
 {% macro list_actions(list_actions) -%}
     <div class="btn-group pull-right">
         {% for action_element in list_actions %}
-            {{ actions_macros.action(action_element=action_element, url=action_element['url'], class=action_element['class']) }}
+            {{ actions_macros.action(action_element=action_element) }}
         {% endfor %}
     </div>
 {%- endmacro %}

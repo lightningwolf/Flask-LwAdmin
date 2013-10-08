@@ -26,11 +26,6 @@ class ConfigParser:
 
     def configure(self, configuration):
         if 'list' in configuration.keys():
-            if 'pk' not in configuration['list'].keys():
-                raise ConfigurationError('Not set list pk element')
-
-            self.parse_list_pk(configuration['list']['pk'])
-
             if 'display' in configuration['list'].keys():
                 self.parse_list_display(configuration['list']['display'])
 
@@ -45,12 +40,6 @@ class ConfigParser:
 
             if 'filter' in configuration['list'].keys():
                 self.parse_filter(configuration['list']['filter'])
-
-    def parse_list_pk(self, pk):
-        if 'key' not in pk:
-            raise ConfigurationError('Wrong configuration format for key pk element')
-
-        self.list_configuration['pk'] = pk
 
     def parse_list_display(self, elements):
         for element in elements:

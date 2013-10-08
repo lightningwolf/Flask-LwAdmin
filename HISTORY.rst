@@ -3,6 +3,11 @@
 History
 -------
 
+0.5.0 (2013-10-08)
+++++++++++++++++++
+
+- API change for list configuration and list templates (object urls now generated in object class using call method)
+
 0.4.2 (2013-10-08)
 ++++++++++++++++++
 
