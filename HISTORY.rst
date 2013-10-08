@@ -3,6 +3,11 @@
 History
 -------
 
+0.4.2 (2013-10-08)
+++++++++++++++++++
+
+- Adding call and visable functionality for object actions in pager
+
 0.4.1 (2013-09-30)
 ++++++++++++++++++
 

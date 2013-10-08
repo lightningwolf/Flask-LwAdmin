@@ -185,13 +185,13 @@ class Pager(ConfigParser):
         """Returns the maximum number of results per page."""
         return self.max_per_page
 
-    def set_max_per_page(self, max):
+    def set_max_per_page(self, max_per_page):
         """Sets the maximum number of results per page."""
-        if max > 0:
-            self.max_per_page = max
+        if max_per_page > 0:
+            self.max_per_page = max_per_page
             if self.page == 0:
                 self.page = 1
-        elif max == 0:
+        elif max_per_page == 0:
             self.max_per_page = 0
             self.page = 0
         else:

@@ -87,6 +87,12 @@ class ConfigParser:
         if 'class' not in action.keys():
             action['class'] = 'btn btn-small'
 
+        if 'call' not in action.keys():
+            action['call'] = False
+
+        if 'visable' not in action.keys():
+            action['visable'] = True
+
         return action
 
     def parse_batch(self, batch_elemet):
@@ -128,7 +134,7 @@ class ConfigParser:
     def is_list_object_actions(self):
         return True if self.list_configuration.get('object_actions', []) else False
 
-    def get_list_object_actions(self):
+    def get_list_object_actions(self, call_object=None):
         actions = self.list_configuration.get('object_actions', [])
         for action in actions:
             pre = action.copy()
@@ -137,6 +143,9 @@ class ConfigParser:
 
             if pre['key'] == 'delete':
                 pre['form'] = Form()
+
+            if pre['call'] and call_object is not None:
+                pre = getattr(call_object, pre['call'])(pre)
 
             yield pre
 

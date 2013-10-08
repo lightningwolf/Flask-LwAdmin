@@ -30,11 +30,13 @@
         {% endfor %}
         <td>
             <div class="btn-group pull-right">
-                {% for action_element in pager.get_list_object_actions() %}
-                    {% if action_element['confirm'] == True %}
-                        {{ actions_macros.confirm_action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class=action_element['class'], confirm_message=action_element['confirm_message']) }}
-                    {% else %}
-                        {{ actions_macros.action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class=action_element['class']) }}
+                {% for action_element in pager.get_list_object_actions(item) %}
+                    {% if action_element['visable'] == True %}
+                        {% if action_element['confirm'] == True %}
+                            {{ actions_macros.confirm_action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class=action_element['class'], confirm_message=action_element['confirm_message']) }}
+                        {% else %}
+                            {{ actions_macros.action(action_element=action_element, url=url_for(action_element['url'], id=item[pk['key']]), class=action_element['class']) }}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
 
