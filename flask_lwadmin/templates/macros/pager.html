@@ -1,9 +1,20 @@
 {% import 'macros/actions.html' as actions_macros %}
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
-{% macro get_list(configuration, pager) -%}
+
+{% macro get_list_page(configuration, pager) -%}
 {% if pager.get_nb_results() == 0 or pager.get_results() == None %}
 <p>{{ gettext('No result') }}</p>
-{% else %}{% set pk = pager.get_pk() %}{% set elements = pager.get_list_display() %}{% set cols = elements|count + 2 if pager.is_batch() else elements|count + 1 %}
+{% else %}
+{{ get_table(pager) }}
+{% if pager.have_to_paginate %}{{ get_pager(pager=pager, page=page, url=url_for('user.user_list')) }}{% endif %}
+{% if pager.is_batch() %}{{ batch_actions_macros.batch_script(id='lw_admin_list_batch_checkbox', class='lw_admin_batch_checkbox') }}{%  endif %}
+{% endif %}
+{%- endmacro %}
+
+{% macro get_table(pager) -%}
+{% set pk = pager.get_pk() %}
+{% set elements = pager.get_list_display() %}
+{% set cols = elements|count + 2 if pager.is_batch() else elements|count + 1 %}
 <table class="table table-hover table-striped">
     <thead>
     <tr>
@@ -23,7 +34,7 @@
     {% for item in pager.get_results() %}
     <tr>
         {% if pager.is_batch() %}
-        {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item[pk['key']])}}
+        {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item[pk])}}
         {% endif %}
         {% for element in elements %}
         <td>{{ item[element['key']] }}</td>
@@ -46,9 +57,6 @@
     {% endfor %}
     </tbody>
 </table>
-{% if pager.have_to_paginate %}{{ get_pager(pager=pager, page=page, url=url_for('user.user_list')) }}{% endif %}
-{% if pager.is_batch() %}{{ batch_actions_macros.batch_script(id='lw_admin_list_batch_checkbox', class='lw_admin_batch_checkbox') }}{%  endif %}
-{% endif %}
 {%- endmacro %}
 
 {% macro get_pager(pager, page, url) -%}

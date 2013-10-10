@@ -24,7 +24,7 @@
     {% endif %}
 
     {% if pager.is_batch() %}{% set batch_element = pager.get_batch() %}<form class="form-inline" action="{{ batch_element['url'] }}" method="post">{% endif %}
-        {{ pager_macros.get_list(configuration=configuration, pager=pager) }}
+        {{ pager_macros.get_list_page(configuration=configuration, pager=pager) }}
         {% if pager.is_batch() or pager.is_list_actions() %}
         <div class="btn-toolbar">
             <div class="btn-group">
