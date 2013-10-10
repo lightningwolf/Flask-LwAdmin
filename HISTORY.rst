@@ -7,7 +7,7 @@ History
 ++++++++++++++++++
 
 - API change for list configuration and list templates (object urls now generated in object class using call method)
-- Changes in Jinja2 macros - breaking some macos API
+- Changes in Jinja2 macros - breaking some macros API
 
 0.4.2 (2013-10-08)
 ++++++++++++++++++
