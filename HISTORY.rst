@@ -3,10 +3,11 @@
 History
 -------
 
-0.5.0 (2013-10-08)
+0.5.0 (2013-10-11)
 ++++++++++++++++++
 
 - API change for list configuration and list templates (object urls now generated in object class using call method)
+- Changes in Jinja2 macros - breaking some macos API
 
 0.4.2 (2013-10-08)
 ++++++++++++++++++
