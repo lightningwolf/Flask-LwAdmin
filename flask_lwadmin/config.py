@@ -11,8 +11,7 @@ class ConfigParser:
     NO_URL = 0
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
-    URL_METHOD = 3
-    URL_PK = 4
+    URL_CALL = 3
 
     def __init__(self):
         self.list_configuration = dict(
@@ -134,6 +133,7 @@ class ConfigParser:
                 pre['form'] = Form()
 
             if pre['call'] and call_object is not None:
+                pre['type'] = self.URL_CALL
                 pre = getattr(call_object, pre['call'])(pre)
 
             yield pre
