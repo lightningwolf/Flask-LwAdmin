@@ -9,12 +9,19 @@
         {{ form_macros.generate_elements(configuration['form'], configuration['display_blocks']) }}
         <div class="form-actions">
             <div class="btn-group pull-left">
+                {% if configuration['submit'] %}
+                {% for action_element in configuration['submit_actions'] %}
+                {{ actions_macros.action(action_element=action_element) }}
+                {% endfor %}
+                {% else %}
                 <input class="btn btn-primary" type="submit" value="Save" />
+                {# in 0.6 default _save_and_add will be removed #}
                 <input class="btn btn-primary" type="submit" value="Save and Add" name="_save_and_add" />
+                {% endif %}
             </div>
             <div class="btn-group pull-right">
                 {% for action_element in configuration['actions'] %}
-                <a title="{{ action_element['label'] }}" class="btn btn-warning" href="{{ action_element['url'] }}"><i class="icon-backward"></i> {{ action_element['label'] }}</a>
+                {{ actions_macros.action(action_element=action_element) }}
                 {% endfor %}
             </div>
         </div>

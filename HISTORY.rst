@@ -7,6 +7,8 @@ History
 ++++++++++++++++++
 
 - Icon can be set for display element in list table head
+- Deprecation info in list macro
+- More configuration options in create and update macros and deprecation info in this macros
 
 0.5.0 (2013-10-11)
 ++++++++++++++++++
