@@ -20,7 +20,7 @@
     <tr>
         {% if pager.is_batch() %}{{ batch_actions_macros.batch_head_row(id='lw_admin_list_batch_checkbox') }}{% endif %}
         {% for element in elements %}
-        <th>{{ element['label'] }}</th>
+        <th>{% if element['icon']  %}<i class="{{ element['icon'] }}"></i>{% if not element['only_icon'] %}&nbsp;{% endif %}{% endif %}{% if element['label'] and not element['only_icon'] %}{{ element['label'] }}{% endif %}</th>
         {% endfor %}
         <th>Actions</th>
     </tr>
