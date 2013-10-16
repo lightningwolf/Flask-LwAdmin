@@ -12,6 +12,7 @@ class ConfigParser:
     URL_INTERNAL = 1
     URL_EXTERNAL = 2
     URL_CALL = 3
+    HTML = 4
 
     def __init__(self):
         self.list_configuration = dict(
@@ -80,6 +81,9 @@ class ConfigParser:
 
         if 'visable' not in action.keys():
             action['visable'] = True
+
+        if 'disabled' not in action.keys():
+            action['disabled'] = False
 
         return action
 
