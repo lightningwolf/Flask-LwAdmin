@@ -3,6 +3,11 @@
 History
 -------
 
+0.5.1 (2013-10-16)
+++++++++++++++++++
+
+- Icon can be set for display element in list table head
+
 0.5.0 (2013-10-11)
 ++++++++++++++++++
 

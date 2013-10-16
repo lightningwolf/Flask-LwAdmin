@@ -4,6 +4,7 @@
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
 {% import 'macros/pager.html' as pager_macros %}
 
+{# In 0.6 list(configuration, pager) - title must be in configuration dictionary #}
 {% macro list(title, configuration, pager) -%}
     <h1>{{ title }}</h1>
 

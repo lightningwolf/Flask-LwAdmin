@@ -1,6 +1,7 @@
 {% import 'macros/messages.html' as messages_macros with context -%}
 {% import 'macros/form.html' as form_macros with context -%}
 
+{# In 0.6 update(configuration) - title must be in configuration dictionary #}
 {% macro update(title, configuration) -%}
     <h1>{{ title }}</h1>
     {{ messages_macros.messages() }}
