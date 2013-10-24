@@ -1,7 +1,12 @@
 {% import 'macros/wtf.html' as wtf %}
 
-{% macro filter_button(id, class='btn') -%}
+{% macro filter_button(id, class='btn', url=None, form=None, reset=False) -%}
 <a href="#{{ id }}" role="button" class="{{ class }}" data-toggle="modal"><i class="icon icon-th-list"></i> {{ gettext('Filters') }}</a>
+    {% if reset and url and form %}
+<a class="btn btn-warning"
+   onclick="var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'post'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', 'csrf_token'); m.setAttribute('value', '{{ form.csrf_token.current_token }}'); f.appendChild(m);f.submit();return false;"
+   href="{{ url }}?action=_reset">{{ gettext('Reset') }}</a>
+    {% endif %}
 {%- endmacro %}
 
 {% macro filter_modal(id, url, form) -%}

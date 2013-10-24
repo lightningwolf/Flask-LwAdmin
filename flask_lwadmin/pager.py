@@ -27,6 +27,10 @@ class Pager(ConfigParser):
         self.results = results
 
     def initialize(self, configuration):
+        self.calculate_pages()
+        self.configure(configuration)
+
+    def calculate_pages(self):
         has_max_record_limit = (self.get_max_record_limit() is not False)
         max_record_limit = self.get_max_record_limit()
 
@@ -49,8 +53,6 @@ class Pager(ConfigParser):
                     self.limit = max_record_limit
             else:
                 self.limit = self.get_max_per_page()
-
-        self.configure(configuration)
 
     def get_offset(self):
         """Return offset for query"""

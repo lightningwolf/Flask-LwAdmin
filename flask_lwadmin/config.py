@@ -2,7 +2,11 @@
 # coding=utf8
 __author__ = 'ldath'
 
-from flask import url_for
+from flask import (
+    url_for,
+    session
+)
+
 from flask_wtf import Form
 from flask_lwadmin import ConfigurationError
 
@@ -88,22 +92,28 @@ class ConfigParser:
         return action
 
     def parse_batch(self, batch_elemet):
-        if not all(k in batch_elemet for k in ('url', 'form')):
+        if not all(k in batch_elemet for k in ('url', )):
             raise ConfigurationError('Wrong configuration format for list filter element')
 
         if 'type' not in batch_elemet.keys():
             batch_elemet['type'] = self.NO_URL
 
+        if 'form' not in batch_elemet.keys():
+            batch_elemet['form'] = None
+
         self.list_configuration['batch'] = batch_elemet
 
-    def parse_filter(self, filter_elemet):
-        if not all(k in filter_elemet for k in ('url', 'form')):
+    def parse_filter(self, filter_element):
+        if not all(k in filter_element for k in ('session_name', 'display', 'url')):
             raise ConfigurationError('Wrong configuration format for list filter element')
 
-        if 'type' not in filter_elemet.keys():
-            filter_elemet['type'] = self.NO_URL
+        if 'type' not in filter_element.keys():
+            filter_element['type'] = self.NO_URL
 
-        self.list_configuration['filter'] = filter_elemet
+        if 'form' not in filter_element.keys():
+            filter_element['form'] = None
+
+        self.list_configuration['filter'] = filter_element
 
     def is_list_actions(self):
         return True if self.list_configuration.get('actions', []) else False
@@ -142,8 +152,12 @@ class ConfigParser:
 
             yield pre
 
+    def set_batch_form(self, form):
+        self.list_configuration['batch']['form'] = form
+
     def is_batch(self):
-        return True if self.list_configuration.get('batch', {}) else False
+        batch = self.list_configuration.get('batch', {})
+        return True if batch.get('form', None) else False
 
     def get_batch(self):
         batch_elemet = self.list_configuration.get('batch', {})
@@ -153,8 +167,12 @@ class ConfigParser:
             pre['url'] = url_for(pre['url'])
         return pre
 
+    def set_filter_form(self, form):
+        self.list_configuration['filter']['form'] = form
+
     def is_filter(self):
-        return True if self.list_configuration.get('filter', {}) else False
+        filter_conf = self.list_configuration.get('filter', {})
+        return True if filter_conf.get('form', None) else False
 
     def get_filter(self):
         filter_elemet = self.list_configuration.get('filter', {})
@@ -163,3 +181,28 @@ class ConfigParser:
         if pre['type'] == self.URL_INTERNAL:
             pre['url'] = url_for(pre['url'])
         return pre
+
+    def is_filtered(self):
+        clean = self.get_clean_filter_data()
+        act = self.get_filter_data()
+        if clean == act:
+            return False
+        return True
+
+    def get_filter_data(self):
+        if self.list_configuration['filter']['session_name'] in session:
+            return session[self.list_configuration['filter']['session_name']]
+        else:
+            return self.get_clean_filter_data()
+
+    def set_filter_data(self, filter_data):
+        session[self.list_configuration['filter']['session_name']] = filter_data
+
+    def reset_filter_data(self):
+        self.set_filter_data(self.get_clean_filter_data())
+
+    def get_clean_filter_data(self):
+        data = {}
+        for element in self.list_configuration['filter']['display']:
+            data[element] = None
+        return data

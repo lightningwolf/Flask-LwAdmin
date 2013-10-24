@@ -2,8 +2,7 @@
 {% import 'macros/form.html' as form_macros with context -%}
 {% import 'macros/actions.html' as actions_macros %}
 
-{# In 0.6 create(configuration) - title must be in configuration dictionary #}
-{% macro create(title, configuration) -%}
+{% macro create(configuration) -%}
     <h1>{{ title }}</h1>
     {{ messages_macros.messages() }}
     <form class="form-horizontal" method="post" action="{{ configuration['url'] }}">
@@ -16,8 +15,6 @@
                 {% endfor %}
                 {% else %}
                 <input class="btn btn-primary" type="submit" value="Save" />
-                {# in 0.6 default _save_and_add will be removed #}
-                <input class="btn btn-primary" type="submit" value="Save and Add" name="_save_and_add" />
                 {% endif %}
             </div>
             <div class="btn-group pull-right">

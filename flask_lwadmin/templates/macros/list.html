@@ -4,23 +4,24 @@
 {% import 'macros/batch_actions.html' as batch_actions_macros %}
 {% import 'macros/pager.html' as pager_macros %}
 
-{# In 0.6 list(configuration, pager) - title must be in configuration dictionary #}
-{% macro list(title, configuration, pager) -%}
+{% macro list(configuration, pager) -%}
     <h1>{{ title }}</h1>
 
     {{ messages_macros.messages() }}
-
+    {% if pager.is_filter() %}
+        {% set filter_element = pager.get_filter() %}
+        {% set is_filtered = pager.is_filtered() %}
+    {% endif %}
     {% if pager.is_filter() or pager.is_list_actions() %}
     <div class="btn-toolbar">
         <div class="btn-group">
-            {% if pager.is_filter() %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal') }}{%  endif %}
+            {% if pager.is_filter() %}{{ filters_macros.filter_button('filtersBootstrapGeneratorModal', url=filter_element['url'], form=filter_element['form'], reset=is_filtered) }}{%  endif %}
         </div>
         {% if pager.is_list_actions() %}{{ list_actions_macros.list_actions(list_actions=pager.get_list_actions()) }}{% endif %}
     </div>
     {%  endif %}
 
     {% if pager.is_filter() %}
-        {% set filter_element = pager.get_filter() %}
         {{ filters_macros.filter_modal(id='filtersBootstrapGeneratorModal', url=filter_element['url'], form=filter_element['form']) }}
     {% endif %}
 

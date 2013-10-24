@@ -3,6 +3,13 @@
 History
 -------
 
+0.6.0 (2013-10-24)
+++++++++++++++++++
+
+- API change in create, update and list macro
+- API change for filters
+- API change for batch_actions
+
 0.5.1 (2013-10-16)
 ++++++++++++++++++
 
