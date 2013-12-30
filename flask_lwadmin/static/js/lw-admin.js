@@ -10,11 +10,11 @@ $(document).ready(function () {
 		showSecond: true
 	});
 
-	$('.table-active td').live('click', function () {
-		if (jQuery(this).index() > 0) {
-			var checkbox = jQuery(this).parents('tr').find('input[type=checkbox]');
+	$('.table-active td').click(function () {
+		if ($(this).index() > 0) {
+			var checkbox = $(this).parents('tr').find('input[type=checkbox]');
 			if (checkbox.is(':checked')) {
-				checkbox.attr('checked', false);
+				checkbox.removeAttr('checked');
 			} else {
 				checkbox.attr('checked', true);
 			}
