@@ -6,7 +6,7 @@
 <p>{{ gettext('No result') }}</p>
 {% else %}
 {{ get_table(pager) }}
-{% if pager.have_to_paginate %}{% set list_action_el =pager.get_list_action() %}{{ get_pager(pager=pager, page=page, url=list_action_el['url']) }}{% endif %}
+{% if pager.have_to_paginate() %}{% set list_action_el =pager.get_list_action() %}{{ get_pager(pager=pager, page=page, url=list_action_el['url']) }}{% endif %}
 {% if pager.is_batch() %}{{ batch_actions_macros.batch_script(id='lw_admin_list_batch_checkbox', class='lw_admin_batch_checkbox') }}{%  endif %}
 {% endif %}
 {%- endmacro %}
