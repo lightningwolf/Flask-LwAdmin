@@ -33,6 +33,9 @@ class ConfigParser:
             if 'display' in configuration['list'].keys():
                 self.parse_list_display(configuration['list']['display'])
 
+            if 'action' in configuration['list'].keys():
+                self.parse_list_action(configuration['list']['action'])
+
             if 'actions' in configuration['list'].keys():
                 self.parse_list_actions(configuration['list']['actions'])
 
@@ -50,6 +53,15 @@ class ConfigParser:
             if not all(k in element for k in ('key', 'label')):
                 raise ConfigurationError('Wrong configuration format for list display element')
             self.list_configuration['display'].append(element)
+
+    def parse_list_action(self, list_element):
+        if not all(k in list_element for k in ('url', )):
+            raise ConfigurationError('Wrong configuration format for list element')
+
+        if 'type' not in list_element.keys():
+            list_element['type'] = self.NO_URL
+
+        self.list_configuration['action'] = list_element
 
     def parse_list_actions(self, actions):
         for action in actions:
@@ -91,17 +103,17 @@ class ConfigParser:
 
         return action
 
-    def parse_batch(self, batch_elemet):
-        if not all(k in batch_elemet for k in ('url', )):
+    def parse_batch(self, batch_element):
+        if not all(k in batch_element for k in ('url', )):
             raise ConfigurationError('Wrong configuration format for list filter element')
 
-        if 'type' not in batch_elemet.keys():
-            batch_elemet['type'] = self.NO_URL
+        if 'type' not in batch_element.keys():
+            batch_element['type'] = self.NO_URL
 
-        if 'form' not in batch_elemet.keys():
-            batch_elemet['form'] = None
+        if 'form' not in batch_element.keys():
+            batch_element['form'] = None
 
-        self.list_configuration['batch'] = batch_elemet
+        self.list_configuration['batch'] = batch_element
 
     def parse_filter(self, filter_element):
         if not all(k in filter_element for k in ('session_name', 'display', 'url')):
@@ -123,6 +135,13 @@ class ConfigParser:
 
     def get_list_display(self):
         return self.list_configuration.get('display', [])
+
+    def get_list_action(self):
+        action = self.list_configuration.get('action')
+        pre = action.copy()
+        if pre['type'] == self.URL_INTERNAL:
+            pre['url'] = url_for(pre['url'])
+        return pre
 
     def get_list_actions(self):
         actions = self.list_configuration.get('actions', [])

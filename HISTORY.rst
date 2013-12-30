@@ -3,6 +3,12 @@
 History
 -------
 
+0.6.1 (2013-12-30)
+++++++++++++++++++
+
+- Active td in pager table for checkbox
+- Bugfix in pager macro
+
 0.6.0 (2013-10-24)
 ++++++++++++++++++
 
