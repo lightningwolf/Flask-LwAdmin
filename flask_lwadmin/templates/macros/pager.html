@@ -22,7 +22,7 @@
         {% for element in elements %}
         <th>{% if element['icon']  %}<i class="{{ element['icon'] }}"></i>{% if not element['only_icon'] %}&nbsp;{% endif %}{% endif %}{% if element['label'] and not element['only_icon'] %}{{ element['label'] }}{% endif %}</th>
         {% endfor %}
-        <th><i class="icon-cogs"></i> Actions</th>
+        {% if pager.is_list_object_actions() %}<th><i class="icon-cogs"></i> Actions</th>{% endif %}
     </tr>
     </thead>
     <tfoot>
@@ -39,6 +39,7 @@
         {% for element in elements %}
         <td>{{ item[element['key']] }}</td>
         {% endfor %}
+        {% if pager.is_list_object_actions() %}
         <td>
             <div class="btn-group pull-right">
                 {% for action_element in pager.get_list_object_actions(item) %}
@@ -50,9 +51,9 @@
                         {% endif %}
                     {% endif %}
                 {% endfor %}
-
             </div>
         </td>
+        {% endif %}
     </tr>
     {% endfor %}
     </tbody>

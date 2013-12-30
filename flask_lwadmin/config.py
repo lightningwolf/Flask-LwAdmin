@@ -11,6 +11,51 @@ from flask_wtf import Form
 from flask_lwadmin import ConfigurationError
 
 
+# Default list object actions
+default_loa = [
+    {
+        'key': 'edit',
+        'label': 'Edit',
+        'icon': 'icon-edit',
+        'call': 'set_edit_button'
+    },
+    {
+        'key': 'delete',
+        'label': 'Delete',
+        'icon': 'icon-trash icon-white',
+        'confirm': True,
+        'confirm_message': 'Are you sure?',
+        'class': 'btn btn-small btn-danger',
+        'call': 'set_del_button'
+    }
+]
+
+# Default back action
+default_ba = [
+    {
+        'key': 'back',
+        'label': 'Back to list',
+        'url': None,
+        'class': 'btn btn-warning',
+        'icon': 'icon-backward'
+    }
+]
+
+# Default create/update submit actions
+default_sa = [
+    {
+        'key': 'save',
+        'label': 'Save',
+        'class': 'btn btn-primary'
+    },
+    {
+        'key': 'save_and_add',
+        'label': 'Save and Add',
+        'class': 'btn btn-primary'
+    }
+]
+
+
 class ConfigParser:
     NO_URL = 0
     URL_INTERNAL = 1
@@ -41,6 +86,8 @@ class ConfigParser:
 
             if 'object_actions' in configuration['list'].keys():
                 self.parse_list_object_actions(configuration['list']['object_actions'])
+            else:
+                self.parse_list_object_actions(default_loa)
 
             if 'batch' in configuration['list'].keys():
                 self.parse_batch(configuration['list']['batch'])
@@ -153,7 +200,7 @@ class ConfigParser:
             yield pre
 
     def is_list_object_actions(self):
-        return True if self.list_configuration.get('object_actions', []) else False
+        return True if len(self.list_configuration.get('object_actions', [])) > 0 else False
 
     def get_list_object_actions(self, call_object=None):
         actions = self.list_configuration.get('object_actions', [])
