@@ -22,7 +22,7 @@
         {% for element in elements %}
         <th>{% if element['icon']  %}<i class="{{ element['icon'] }}"></i>{% if not element['only_icon'] %}&nbsp;{% endif %}{% endif %}{% if element['label'] and not element['only_icon'] %}{{ element['label'] }}{% endif %}</th>
         {% endfor %}
-        <th>Actions</th>
+        <th><i class="icon-cogs"></i> Actions</th>
     </tr>
     </thead>
     <tfoot>
