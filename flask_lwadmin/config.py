@@ -99,6 +99,10 @@ class ConfigParser:
         for element in elements:
             if not all(k in element for k in ('key', 'label')):
                 raise ConfigurationError('Wrong configuration format for list display element')
+
+            if not 'type' in element:
+                element['type'] = 'string'
+
             self.list_configuration['display'].append(element)
 
     def parse_list_action(self, list_element):

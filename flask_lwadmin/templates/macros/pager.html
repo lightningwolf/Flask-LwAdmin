@@ -37,7 +37,7 @@
         {{ batch_actions_macros.batch_body_row(class='lw_admin_batch_checkbox', value=item[pk])}}
         {% endif %}
         {% for element in elements %}
-        <td>{{ item[element['key']] }}</td>
+        <td>{% if element['type'] == 'bool' %}{% if item[element['key']] == True or item[element['key']] == 1 %}<i class="icon-check"></i>{% else %}<i class="icon-minus"></i>{% endif %}{% else %}{{ item[element['key']] }}{% endif %}</td>
         {% endfor %}
         {% if pager.is_list_object_actions() %}
         <td>
