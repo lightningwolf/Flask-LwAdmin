@@ -3,7 +3,7 @@
 {% import 'macros/actions.html' as actions_macros %}
 
 {% macro update(configuration) -%}
-    <h1>{{ title }}</h1>
+    <h1>{{ configuration['title'] }}</h1>
     {{ messages_macros.messages() }}
     <form class="form-horizontal" method="post" action="{{ configuration['url'] }}">
         {{ form_macros.generate_elements(configuration['form'], configuration['display_blocks']) }}

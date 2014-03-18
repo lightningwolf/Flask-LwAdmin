@@ -5,7 +5,7 @@
 {% import 'macros/pager.html' as pager_macros %}
 
 {% macro list(configuration, pager) -%}
-    <h1>{{ title }}</h1>
+    <h1>{{ configuration['list']['title'] }}</h1>
 
     {{ messages_macros.messages() }}
     {% if pager.is_filter() %}
